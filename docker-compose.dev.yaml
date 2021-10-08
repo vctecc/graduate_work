@@ -1,0 +1,30 @@
+version: '3.8'
+services:
+
+  redis:
+    extends:
+      file: docker-compose.yaml
+      service: redis
+
+  postgres:
+    environment:
+      - POSTGRES_MULTIPLE_DBS
+      - POSTGRES_USER
+      - POSTGRES_PASSWORD
+    extends:
+      file: docker-compose.yaml
+      service: postgres
+
+  rabbit:
+    extends:
+      file: docker-compose.yaml
+      service: rabbit
+
+networks:
+  movies-api-network:
+    name: movies-api-network
+    driver: bridge
+
+volumes:
+  postgresdata:
+  redis-data:
