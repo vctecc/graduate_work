@@ -32,6 +32,28 @@ services:
       - movies-api-network
     restart: on-failure
 
+  scheduler:
+    build: ./order_service
+    command: celery -A order_service.celery_app beat
+    volumes:
+      - ./order_service:/app/order_service/
+    depends_on:
+      - rabbit
+    networks:
+      - movies-api-network
+
+  worker:
+    build: ./order_service
+    command: celery -A order_service.celery_app worker --loglevel=DEBUG
+    volumes:
+      - ./order_service:/app/order_service/
+    depends_on:
+      - rabbit
+    environment:
+      - CELERY_BROKER_URL=$CELERY_BROKER_URL
+    networks:
+      - movies-api-network
+
 networks:
   movies-api-network:
     name: movies-api-network

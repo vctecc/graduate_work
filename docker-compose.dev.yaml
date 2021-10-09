@@ -20,6 +20,16 @@ services:
       file: docker-compose.yaml
       service: rabbit
 
+  scheduler:
+    extends:
+      file: docker-compose.yaml
+      service: scheduler
+
+  worker:
+    extends:
+      file: docker-compose.yaml
+      service: worker
+
 networks:
   movies-api-network:
     name: movies-api-network
