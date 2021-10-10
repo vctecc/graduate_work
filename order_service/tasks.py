@@ -3,7 +3,7 @@ from abc import ABC
 from celery import Task
 
 from .celery_app import app
-from .core.config import SCHEDULE, SUBSCRIPTION_API_URL, PAYMENTS_API_URL
+from .core.config import SUBSCRIPTION_API_URL, PAYMENTS_API_URL
 from .services.subscription import SubscriptionService
 from .services.payment import PaymentService
 from .providers.stripe import Stripe
@@ -25,7 +25,7 @@ class BaseTaskWithRetry(Task, ABC):
 def handle_payment_orders(self):
     """Get unpaid subscriptions for the schedule period, register and pay them"""
 
-    pending_subscriptions = subscription_service.get_pending_subscriptions(SCHEDULE)
+    pending_subscriptions = subscription_service.get_pending_subscriptions()
 
     for subscription in pending_subscriptions:
         payment_service.register_payment(subscription)
