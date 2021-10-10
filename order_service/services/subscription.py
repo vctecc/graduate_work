@@ -20,7 +20,3 @@ class SubscriptionService:
         data = response.json()
         logging.info(f"Got subscriptions: {data}")
         return data
-
-
-'''sub = SubscriptionService("https://31e9ff3d-42ad-467e-9eb6-ccfa680d9f00.mock.pstmn.io/api/v1/")
-sub.get_pending_subscriptions(timedelta(seconds=30))'''
