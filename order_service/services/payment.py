@@ -3,7 +3,7 @@ from urllib.parse import urljoin
 
 import requests
 
-from ..models.PaidFacility import PaidFacility
+from models.PaidFacility import PaidFacility
 
 
 class PaymentService:

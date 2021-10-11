@@ -1,8 +1,8 @@
 from celery import Celery
 
-from .core.config import BROKER_URL, CELERYBEAT_SCHEDULE
+from core.config import BROKER_URL, CELERYBEAT_SCHEDULE
 
 
 app = Celery('order_service', broker=BROKER_URL,
-             include=['order_service.tasks'])
+             include=['tasks'])
 app.conf.beat_schedule = CELERYBEAT_SCHEDULE

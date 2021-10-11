@@ -33,20 +33,18 @@ services:
     restart: on-failure
 
   scheduler:
-    build: ./order_service
-    command: celery -A order_service.celery_app beat
-    volumes:
-      - ./order_service:/app/order_service/
+    build:
+      context: ./order_service
+      dockerfile: DockerFile-scheduler
     depends_on:
       - rabbit
     networks:
       - movies-api-network
 
   worker:
-    build: ./order_service
-    command: celery -A order_service.celery_app worker --loglevel=DEBUG
-    volumes:
-      - ./order_service:/app/order_service/
+    build:
+      context: ./order_service
+      dockerfile: Dockerfile-worker
     depends_on:
       - rabbit
     environment:

@@ -2,11 +2,11 @@ from abc import ABC
 
 from celery import Task
 
-from .celery_app import app
-from .core.config import SUBSCRIPTION_API_URL, PAYMENTS_API_URL
-from .services.subscription import SubscriptionService
-from .services.payment import PaymentService
-from .providers.stripe import Stripe
+from core.celery_app import app
+from core.config import SUBSCRIPTION_API_URL, PAYMENTS_API_URL
+from services.subscription import SubscriptionService
+from services.payment import PaymentService
+from providers.stripe import Stripe
 
 
 subscription_service = SubscriptionService(SUBSCRIPTION_API_URL)
