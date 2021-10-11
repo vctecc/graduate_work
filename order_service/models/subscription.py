@@ -1,4 +1,4 @@
-from .PaidFacility import PaidFacility
+from .paid_facility import PaidFacility
 
 
 class Subscription(PaidFacility):
