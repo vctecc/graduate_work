@@ -1,23 +1,21 @@
-from http import HTTPStatus
-from typing import List, Optional
+from fastapi import APIRouter, Depends
 
-from fastapi import APIRouter, Depends, HTTPException, Query
+from src.services import PaymentService, get_payment_auth_service, PaymentAuthenticatedService, get_payment_service
+from src.schemas import NewPaymentSchema, PaymentSchema
 
-from src.services import SubscriptionService, get_subscription_service
-from src.schemas import Payment, Subscription
 router = APIRouter()
 
 
-@router.post("/create-subscription",)
+@router.post("/payments", status_code=201)
 async def create_subscription(
-        payment: Payment,
-        subscription_service: SubscriptionService = Depends(get_subscription_service)
-) -> Subscription:
-    return subscription_service.create(payment)
+        payment: NewPaymentSchema,
+        payment_service: PaymentAuthenticatedService = Depends(get_payment_auth_service)
+):
+    await payment_service.create(payment)
 
 
-@router.post("/cancel-subscription",)
+@router.get("/payments", response_model=list[PaymentSchema])
 async def cancel_subscription(
-        subscription_service: SubscriptionService = Depends(get_subscription_service),
-) -> None:
-    subscription_service.cancel()
+        payment_service: PaymentService = Depends(get_payment_service),
+) -> list[PaymentSchema]:
+    return await payment_service.get_processing()
