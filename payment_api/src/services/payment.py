@@ -1,3 +1,5 @@
+from functools import lru_cache
+
 from fastapi import Depends
 from sqlalchemy import select
 from sqlalchemy.orm import Session
@@ -6,7 +8,7 @@ import stripe
 from src.core.auth import auth
 from src.db.session import get_db
 from src.models.payments import Payment, PaymentState
-from src.schemas import Subscription, CustomerSchema, PaymentSchema, NewPaymentSchema
+from src.schemas import NewPaymentSchema
 from src.models import Customer
 
 
@@ -61,8 +63,8 @@ class PaymentService(object):
     def __init__(self, db: Session):
         self.db = db
 
-    async def get(self, payment_id):
-        return await self.db.get(payment_id)
+    async def get(self, payment_id) -> Payment:
+        return await self.db.get(Payment, payment_id)
 
     async def get_processing(self) -> list[Payment]:
         return await self.db.execute(
@@ -73,12 +75,13 @@ class PaymentService(object):
             )
         ).all()
 
-    async def update_status(self, payment_id, status):
+    async def update_status(self, payment_id, status: PaymentState):
         payment = await self.get(payment_id)
         payment.status = status
         await self.db.commit()
 
 
+@lru_cache(maxsize=128)
 def get_payment_auth_service(
         db: Session = Depends(get_db),
         user_id: str = Depends(auth),
@@ -86,6 +89,7 @@ def get_payment_auth_service(
     return PaymentAuthenticatedService(db, user_id)
 
 
+@lru_cache(maxsize=128)
 def get_payment_service(
         db: Session = Depends(get_db),
 ):
