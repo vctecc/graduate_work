@@ -3,17 +3,21 @@ from typing import List, Optional
 
 from fastapi import APIRouter, Depends, HTTPException, Query
 
+from src.services import SubscriptionService, get_subscription_service
+from src.schemas import Payment, Subscription
 router = APIRouter()
 
 
-@router.get("/{film_id}",
-            response_model=Film,
-            description="Подробная информация о фильме с указанным ID",
-            )
-async def film_details(film_id: str = Query(None, description="Идентификатор"),
-                       film_service: FilmService = Depends(get_film_service)
-                       ) -> Film:
-    film = await film_service.get_by_id(film_id)
-    if not film:
-        raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="film not found")
-    return film
+@router.post("/create-subscription",)
+async def create_subscription(
+        payment: Payment,
+        subscription_service: SubscriptionService = Depends(get_subscription_service)
+) -> Subscription:
+    return subscription_service.create(payment)
+
+
+@router.post("/cancel-subscription",)
+async def cancel_subscription(
+        subscription_service: SubscriptionService = Depends(get_subscription_service),
+) -> None:
+    subscription_service.cancel()
