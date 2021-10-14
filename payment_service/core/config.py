@@ -8,10 +8,10 @@ BROKER_URL = os.getenv("CELERY_BROKER_URL", "pyamqp://guest:guest@rabbit//")
 SCHEDULE = timedelta(seconds=5)
 
 CELERYBEAT_SCHEDULE = {
-    'handle_payment_orders': {
-        'task': 'handle_payment_orders',
+    'handle_pending_payments': {
+        'task': 'handle_pending_payments',
         'schedule': SCHEDULE,
-        'options': {'queue': 'orders'},
+        'options': {'queue': 'payments'},
         'args': ()
     },
 }

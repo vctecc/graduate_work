@@ -7,4 +7,4 @@ RUN apt update && apt -y upgrade && apt install -y python3-setuptools netcat && 
 
 COPY . .
 RUN pipenv install --system --deploy --skip-lock
-CMD ["celery", "-A", "core.celery_app", "worker", "--loglevel=DEBUG", "-Q", "orders"]
+CMD ["celery", "-A", "core.celery_app", "worker", "--loglevel=DEBUG", "-Q", "payments"]

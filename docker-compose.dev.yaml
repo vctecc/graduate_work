@@ -20,15 +20,25 @@ services:
       file: docker-compose.yaml
       service: rabbit
 
-  scheduler:
+  order_scheduler:
     extends:
       file: docker-compose.yaml
-      service: scheduler
+      service: order_scheduler
 
-  worker:
+  order_worker:
     extends:
       file: docker-compose.yaml
-      service: worker
+      service: order_worker
+
+  payment_scheduler:
+    extends:
+      file: docker-compose.yaml
+      service: payment_scheduler
+
+  payment_worker:
+    extends:
+      file: docker-compose.yaml
+      service: payment_worker
 
 networks:
   movies-api-network:
