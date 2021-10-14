@@ -12,7 +12,7 @@ class Stripe(BaseProvider):
         return
 
     def acknowledge_payment_status(self, provider_user_id: str, **kwargs) -> str:
-        statuses = ["success", "failed", "Processing"]
+        statuses = ["success", "failed", "Processing"]  # TODO: replace strings with constants
         status = random.choice(statuses)
         logging.info(f"Stripe sent the payment status {status}")
         return status

@@ -1,4 +1,5 @@
 import logging
+from typing import Tuple
 from urllib.parse import urljoin
 
 import requests
@@ -10,11 +11,12 @@ class PaymentService:
     def __init__(self, url):
         self.base_api_url = url
 
-    def get_processing_payments(self) -> list[Payment]:
+    def get_processing_payments(self) -> Tuple[Payment]:
         url = urljoin(self.base_api_url, 'payment/')
         response = requests.get(url, params={"status": "Processing"})
         response.raise_for_status()
-        processing_payments = response.json()
+        data = response.json()
+        processing_payments = tuple(Payment(**item) for item in data)
         logging.info(f"Got processing payments: {processing_payments}")
         return processing_payments
 

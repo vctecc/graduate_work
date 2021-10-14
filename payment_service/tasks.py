@@ -25,7 +25,7 @@ def handle_pending_payments(self):
     processing_payments = payment_service.get_processing_payments()
 
     for payment in processing_payments:
-        status = provider.acknowledge_payment_status(payment["provider_user_id"])
-        if status is not "Processing":
-            payment_service.update_payment_status(payment["id"], status)
+        status = provider.acknowledge_payment_status(payment.provider_user_id)
+        if status != "Processing":
+            payment_service.update_payment_status(payment.id, status)
 
