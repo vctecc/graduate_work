@@ -29,5 +29,5 @@ def handle_payment_orders(self):
 
     for subscription in pending_subscriptions:
         payment_service.register_payment(subscription)
-        provider.send_payment_request(subscription["provider_user_id"], subscription["payment_amount"])
+        provider.send_payment_request(subscription.provider_user_id, subscription.payment_amount)
 
