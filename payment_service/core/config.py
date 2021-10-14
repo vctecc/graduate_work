@@ -5,7 +5,7 @@ import logging.config as logging_config
 
 BROKER_URL = os.getenv("CELERY_BROKER_URL", "pyamqp://guest:guest@rabbit//")
 
-SCHEDULE = timedelta(seconds=5)
+SCHEDULE = timedelta(hours=24)
 
 CELERYBEAT_SCHEDULE = {
     'handle_pending_payments': {
