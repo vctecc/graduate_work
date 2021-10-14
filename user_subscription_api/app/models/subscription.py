@@ -1,10 +1,10 @@
 import enum
 
-from sqlalchemy import Column, ForeignKey, DateTime, Enum
+from sqlalchemy import Column, DateTime, Enum, ForeignKey
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 
-from app.db import TimeStampBase, RequiredColumn
+from app.db import RequiredColumn, TimeStampBase
 
 
 class SubscriptionState(str, enum.Enum):

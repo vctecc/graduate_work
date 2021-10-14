@@ -1,8 +1,9 @@
 import os
-from typing import Optional, Dict, Any
 from logging import config as logging_config
+from typing import Any, Dict, Optional
 
-from pydantic import BaseSettings, Field, validator, PostgresDsn
+from pydantic import BaseSettings, Field, PostgresDsn, validator
+
 from .logger import LOG_CONFIG
 
 logging_config.dictConfig(LOG_CONFIG)

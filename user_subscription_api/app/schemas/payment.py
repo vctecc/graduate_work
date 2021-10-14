@@ -2,10 +2,10 @@
 
 from datetime import date
 from decimal import Decimal
+from enum import Enum
 from uuid import UUID
 
 from pydantic import BaseModel
-from enum import Enum
 
 
 class PaymentSystem(str, Enum):

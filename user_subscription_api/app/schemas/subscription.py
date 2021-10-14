@@ -1,8 +1,9 @@
 import datetime
+
+from models import SubscriptionState
 from pydantic import BaseModel
 
 from .product import Product
-from models import SubscriptionState
 
 
 class Subscription(BaseModel):

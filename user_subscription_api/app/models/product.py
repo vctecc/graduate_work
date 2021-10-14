@@ -1,6 +1,6 @@
-from sqlalchemy import Column, String, Integer, Boolean
+from sqlalchemy import Boolean, Column, Integer, String
 
-from app.db import TimeStampBase, RequiredColumn
+from app.db import RequiredColumn, TimeStampBase
 
 
 class Product(TimeStampBase):

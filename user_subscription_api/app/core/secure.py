@@ -1,10 +1,10 @@
 import logging
 
 import backoff
-from jose import jwt, JWTError
-from fastapi import status, HTTPException, Depends
-from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from aiohttp import ClientConnectorError, ClientSession, ServerConnectionError
+from fastapi import Depends, HTTPException, status
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
+from jose import JWTError, jwt
 
 from .config import settings
 

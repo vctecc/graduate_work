@@ -1,11 +1,11 @@
 from http import HTTPStatus
 from typing import List, Optional
 
+from core import User, get_current_user
 from fastapi import APIRouter, Depends, HTTPException, Query
-
 from schemas import Product, ProductDetail
-from core import get_current_user, User
 from services import ProductService, get_product_service
+
 from .error_messag import PRODUCT_NOT_FOUND
 
 product_router = APIRouter()

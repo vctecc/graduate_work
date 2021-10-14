@@ -2,12 +2,11 @@ import logging
 
 # import aioredis
 import uvicorn as uvicorn
+from api.v1 import product_router, service_router, user_router
+from core.config import LOG_CONFIG, settings
 from fastapi import FastAPI
 from fastapi.responses import ORJSONResponse
-
-from core.config import settings, LOG_CONFIG
 from tags import tags_metadata
-from api.v1 import user_router, service_router, product_router
 
 app = FastAPI(
     title=settings.project_name,
