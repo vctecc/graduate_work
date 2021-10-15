@@ -1,8 +1,9 @@
 from http import HTTPStatus
 from typing import List, Optional
 
-from core import User, get_current_user
 from fastapi import APIRouter, Depends, HTTPException, Query
+
+from core import User, get_current_user
 from schemas import Product, ProductDetail
 from services import ProductService, get_product_service
 

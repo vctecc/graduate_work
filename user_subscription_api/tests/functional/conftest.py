@@ -5,7 +5,7 @@ import aiohttp
 import pytest
 from multidict import CIMultiDictProxy
 
-from .settings import API_SERVICE_URL, API
+from .settings import API_SERVICE_URL, API_VERSION
 
 
 @dataclass
@@ -29,7 +29,7 @@ def event_loop():
 
 @pytest.fixture(scope="session")
 def api_url():
-    return f"{API_SERVICE_URL}/api/{API}"
+    return f"{API_SERVICE_URL}/api/{API_VERSION}"
 
 
 @pytest.fixture

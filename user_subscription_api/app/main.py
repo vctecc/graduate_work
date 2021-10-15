@@ -1,11 +1,11 @@
 import logging
 
-# import aioredis
-import uvicorn as uvicorn
-from api.v1 import product_router, service_router, user_router
-from core.config import LOG_CONFIG, settings
+import uvicorn
 from fastapi import FastAPI
 from fastapi.responses import ORJSONResponse
+
+from api.v1 import product_router, service_router, user_router
+from core.config import LOG_CONFIG, settings
 from tags import tags_metadata
 
 app = FastAPI(
@@ -20,18 +20,13 @@ app = FastAPI(
 @app.on_event("startup")
 async def startup():
     pass
-    # redis_cache.redis = await aioredis.create_redis_pool((config.REDIS_HOST, config.REDIS_PORT),
-    #                                                      minsize=10,
-    #                                                      maxsize=20,
-    #                                                      timeout=1)
-    # es_storage.es = AsyncElasticsearch(hosts=[f"{config.ELASTIC_HOST}:{config.ELASTIC_PORT}"])
+    # redis_cache.redis = await aioredis.create_redis_pool()
 
 
 @app.on_event("shutdown")
 async def shutdown():
     pass
     # await redis_cache.redis.close()
-    # await es_storage.es.close()
 
 
 app.include_router(user_router, prefix="/api/v1/user", tags=["user"])

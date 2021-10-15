@@ -4,6 +4,7 @@ from uuid import UUID
 from pydantic import BaseModel
 
 from app.models.subscription import SubscriptionState
+
 from .product import Product
 
 

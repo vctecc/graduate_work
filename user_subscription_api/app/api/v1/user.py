@@ -1,9 +1,11 @@
 from http import HTTPStatus
 
-from core import User, get_current_user
 from fastapi import APIRouter, Depends, HTTPException, Query
+
 from app.schemas.subscription import SubscriptionPreview
-from app.services.subscription import SubscriptionService, get_subscription_service
+from app.services.subscription import (SubscriptionService,
+                                       get_subscription_service)
+from core import User, get_current_user
 
 from .error_messag import ACTIVE_SUBSCRIPTION_NOT_FOUND
 

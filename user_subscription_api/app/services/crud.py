@@ -1,4 +1,5 @@
-from typing import ClassVar, Any, Optional, TypeVar
+from typing import Any, ClassVar, Optional, TypeVar
+
 from sqlalchemy.orm import Session
 
 from app.db.base_class import TimeStampBase

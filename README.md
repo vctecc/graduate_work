@@ -16,6 +16,6 @@ cd ./user_subscription_api
 Либо выполнить руками:
 ```shell
 cd ./user_subscription_api
-export PATHONPATH=$(readlink -f ./)
+export PYTHONPATH=$(readlink -f ./)
 alembic upgrade head
 ```

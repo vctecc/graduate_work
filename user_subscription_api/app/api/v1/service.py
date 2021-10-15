@@ -1,9 +1,11 @@
-from typing import Optional
 from http import HTTPStatus
+from typing import Optional
 
 from fastapi import APIRouter, Depends, HTTPException, Query
-from app.schemas.subscription import SubscriptionPreview, SubscriptionDetails
-from app.services.subscription import SubscriptionService, get_subscription_service
+
+from app.schemas.subscription import SubscriptionDetails, SubscriptionPreview
+from app.services.subscription import (SubscriptionService,
+                                       get_subscription_service)
 
 from .error_messag import SUBSCRIPTION_NOT_FOUND
 
