@@ -1,1 +1,3 @@
-from payment import PaymentSchema, NewPaymentSchema, CustomerSchema
+from .base import AbstractSchema
+from .payment import PaymentSchema, NewPaymentSchema, NewPaymentResult
+from .customer import CustomerSchema

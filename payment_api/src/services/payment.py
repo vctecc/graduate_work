@@ -1,61 +1,62 @@
-from functools import lru_cache
-
 from fastapi import Depends
 from sqlalchemy import select
 from sqlalchemy.orm import Session
-import stripe
 
 from src.core.auth import auth
 from src.db.session import get_db
 from src.models.payments import Payment, PaymentState
-from src.schemas import NewPaymentSchema
-from src.models import Customer
+from src.providers import AbstractProvider, ProviderPayment, ProviderPaymentResult, get_default_provider
+from src.schemas import NewPaymentSchema, CustomerSchema
+from src.schemas.payment import NewPaymentResult
+from src.services.subscriptions import SubscriptionService, get_subscriptions_service
+
+
+class NotFound(BaseException):
+    ...
 
 
 class PaymentAuthenticatedService(object):
 
-    def __init__(self, db: Session, user_id: str):
+    def __init__(
+            self,
+            db: Session,
+            user_id: str,
+            provider: AbstractProvider,
+            subscriptions: SubscriptionService,
+    ):
         self.db = db
         self.user_id = user_id
+        self.provider = provider
+        self.subscriptions = subscriptions
 
-    async def get_create_customer(self) -> Customer:
-        customer_db = await self.db.execute(
-            select(
-                Customer.provider_id
-            ).where(
-                Customer.user_id == self.user_id
-            )
-        ).all()
+    async def get_customer(self) -> CustomerSchema:
+        customer = await self.subscriptions.get_customer(self.user_id)
+        if not customer:
+            customer = await self.provider.create_customer()
 
-        if not customer_db:
-            customer = stripe.Customer.create()
-            customer_db = Customer(
-                user_id=self.user_id,
-                provider_id=customer.stripe_id
-            )
-            self.db.add(customer_db)
-            await self.db.commit()
+        return customer
 
-        return customer_db
+    async def new_payment(self, payment: NewPaymentSchema) -> NewPaymentResult:
 
-    async def create(self, payment: NewPaymentSchema):
-        customer = await self.get_create_customer()
+        customer = await self.get_customer()
+        price = await self.subscriptions.get_product_price(payment.product)
 
-        invoice = stripe.Invoice.create(
-            customer=customer.provider_id,
-            items=[{
-                'product': payment.product,
-                'price': payment.price,
-            }],
+        provider_payment = ProviderPayment(
+            amount=price,
+            currency=payment.currency,
+            customer=customer.id
         )
+        invoice = await self.provider.create_payment(provider_payment)
 
-        customer_db = Payment(
-            customern=customer.id,
-            provider_id=invoice.stripe_id,
+        payment_db = Payment(
+            customer_id=customer.id,
+            invoice_id=invoice.id,
             status=PaymentState.PROCESSING
         )
-        self.db.add(customer_db)
+        self.db.add(payment_db)
         await self.db.commit()
+
+        return NewPaymentResult(id=invoice.id, client_secret=invoice.client_secret)
 
 
 class PaymentService(object):
@@ -63,17 +64,18 @@ class PaymentService(object):
     def __init__(self, db: Session):
         self.db = db
 
-    async def get(self, payment_id) -> Payment:
+    async def get(self, payment_id: int) -> Payment:
         return await self.db.get(Payment, payment_id)
 
     async def get_processing(self) -> list[Payment]:
-        return await self.db.execute(
+        proccessing_payments = await self.db.execute(
             select(
-                Payment.provider_id, Payment.status, Payment.customer_id
+                Payment.customer_id, Payment.invoice_id, Payment.status
             ).where(
                 Payment.status == PaymentState.PROCESSING
             )
-        ).all()
+        )
+        return proccessing_payments.all()
 
     async def update_status(self, payment_id, status: PaymentState):
         payment = await self.get(payment_id)
@@ -81,15 +83,20 @@ class PaymentService(object):
         await self.db.commit()
 
 
-@lru_cache(maxsize=128)
 def get_payment_auth_service(
         db: Session = Depends(get_db),
-        user_id: str = Depends(auth),
+        user_id: str = "",
+        provider: AbstractProvider = Depends(get_default_provider),
+        subscriptions: SubscriptionService = Depends(get_subscriptions_service)
 ):
-    return PaymentAuthenticatedService(db, user_id)
+    return PaymentAuthenticatedService(
+        db=db,
+        user_id=user_id,
+        provider=provider,
+        subscriptions=subscriptions
+    )
 
 
-@lru_cache(maxsize=128)
 def get_payment_service(
         db: Session = Depends(get_db),
 ):

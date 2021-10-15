@@ -1,18 +1,22 @@
-from src.schemas.base import AbstractSchema
+from src.models import PaymentState
+from src.schemas import AbstractSchema
 
 
 class PaymentSchema(AbstractSchema):
     customer_id: str
-    provider_id: str
-    status: str
+    invoice_id: str
+    status: PaymentState
 
     class Config:
         orm_mode = True
+        use_enum_values = True
 
 
 class NewPaymentSchema(AbstractSchema):
     product: str
     currency: str
-    price: int
-    quantity: int = 1
 
+
+class NewPaymentResult(AbstractSchema):
+    id: str
+    client_secret: str

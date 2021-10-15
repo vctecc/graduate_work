@@ -1,1 +1,1 @@
-from .payments import Customer
+from .payments import PaymentState, Payment

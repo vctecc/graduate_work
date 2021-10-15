@@ -9,6 +9,12 @@ fastapi = "==0.70.0"
 pyjwt = "==2.2.0"
 sqlalchemy = "==1.4.25"
 asyncpg = "==0.24.0"
+uvicorn = "*"
+pytest = "==6.2.5"
+aiohttp = "*"
+alembic = "*"
+orjson = "*"
+pytest-asyncio = "==0.15.1"
 
 [dev-packages]
 
