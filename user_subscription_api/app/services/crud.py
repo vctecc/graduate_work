@@ -1,5 +1,9 @@
-from typing import ClassVar, Any, Optional
+from typing import ClassVar, Any, Optional, TypeVar
 from sqlalchemy.orm import Session
+
+from app.db.base_class import TimeStampBase
+
+ModelType = TypeVar("ModelType", bound=TimeStampBase)
 
 
 class CRUDBase:
@@ -7,8 +11,8 @@ class CRUDBase:
         self.db = db
         self.model = model
 
-    async def get(self, id: Any):
-        return self.db.query(self.model).filter(self.model.id == id).first()
+    async def get(self, _id: Any):
+        return self.db.query(self.model).filter(self.model.id == _id).first()
 
     async def create(self, obj: dict):
         db_obj = self.model(**obj)
@@ -17,11 +21,17 @@ class CRUDBase:
         self.db.refresh(db_obj)
         return db_obj
 
-    async def update(self):
-        pass
+    async def update(self, db_obj: ModelType, update_data: dict):
+        for field, value in update_data.items():
+            if hasattr(db_obj, field):
+                setattr(db_obj, field, value)
 
-    async def remove(self, id: Any):
-        obj = self.db.query(self.model).get(id)
-        self.db.delete(obj)
         self.db.commit()
-        return obj
+        self.db.refresh(db_obj)
+        return db_obj
+
+    async def remove(self, _id: Any):
+        db_obj = self.db.query(self.model).get(_id)
+        self.db.delete(db_obj)
+        self.db.commit()
+        return db_obj
