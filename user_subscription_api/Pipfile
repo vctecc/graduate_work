@@ -13,6 +13,10 @@ fastapi = "0.70.0"
 backoff = "1.11.1"
 aiohttp = "*"
 psycopg2-binary = "*"
+orjson = "*"
+pytest = "*"
+anyio = "*"
+pytest-asyncio = "*"
 
 [dev-packages]
 

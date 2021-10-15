@@ -11,6 +11,9 @@ class Product(BaseModel):
     period: int
     is_active: bool
 
+    class Config:
+        orm_mode = True
+
 
 class ProductDetail(BaseModel):
     id: UUID
@@ -20,4 +23,7 @@ class ProductDetail(BaseModel):
     currency_code: str
     period: int
     is_active: bool
+
+    class Config:
+        orm_mode = True
 

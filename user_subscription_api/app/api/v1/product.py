@@ -15,14 +15,14 @@ product_router = APIRouter()
 async def get_all_products(
         service: ProductService = Depends(get_product_service)
 ) -> List[Product]:
-    return await service.find_all()
+    return await service.get_all()
 
 
 @product_router.get("/active", response_model=List[Product], status_code=200)
 async def get_active_product(
         service: ProductService = Depends(get_product_service)
 ) -> List[Product]:
-    return await service.find_all(only_active=True)
+    return await service.get_all(only_active=True)
 
 
 @product_router.get("/{product_id}", response_model=ProductDetail, status_code=200)
@@ -30,7 +30,7 @@ async def get_product_details(
         product_id: str = Query(None),
         service: ProductService = Depends(get_product_service)
 ) -> ProductDetail:
-    product = await service.find(product_id)
+    product = await service.get(product_id)
     if not product:
         raise HTTPException(status_code=HTTPStatus.NOT_FOUND,
                             detail=PRODUCT_NOT_FOUND)
@@ -52,7 +52,7 @@ async def set_product_inactive(
         user: User = Depends(get_current_user),
         service: ProductService = Depends(get_product_service)
 ):
-    product = await service.find(product_id)
+    product = await service.get_by_id(product_id)
     if not product:
         raise HTTPException(status_code=HTTPStatus.NOT_FOUND,
                             detail=PRODUCT_NOT_FOUND)
