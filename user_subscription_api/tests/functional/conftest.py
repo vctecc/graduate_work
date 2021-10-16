@@ -1,11 +1,15 @@
 import asyncio
+from calendar import timegm
 from dataclasses import dataclass
+from datetime import datetime, timedelta
 
 import aiohttp
 import pytest
+from jose import jwt
 from multidict import CIMultiDictProxy
 
-from .settings import API_SERVICE_URL, API_VERSION
+from .settings import (API_SERVICE_URL, API_VERSION,
+                       ALGORITHM, SECRET_KEY, USER_ID)
 
 
 @dataclass
@@ -34,7 +38,18 @@ def api_url():
 
 @pytest.fixture
 async def auth() -> str:
-    return ''
+    now = timegm(datetime.utcnow().utctimetuple())
+    exp = timegm((datetime.utcnow() + timedelta(minutes=10)).utctimetuple())
+    data = {
+        'iat': now,
+        'jti': 'cf60f579-1cf8-4ca3-8d46-f19e629832d4',
+        'type': 'access',
+        'sub': USER_ID,
+        'nbf': now,
+        'exp': exp,
+        'role': 'admin'
+    }
+    return jwt.encode(data, SECRET_KEY, ALGORITHM)
 
 
 @pytest.fixture

@@ -12,6 +12,7 @@ async def test_product_by_id(api_url, make_get_request):
 async def test_get_all_products(api_url, make_get_request):
     response = await make_get_request(f"{api_url}/product/")
     assert response.status == 200, "Couldn't get products."
+    print(response.body)
 
 
 @pytest.mark.asyncio

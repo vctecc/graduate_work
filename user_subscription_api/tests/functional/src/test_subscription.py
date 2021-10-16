@@ -3,6 +3,7 @@ import pytest
 
 PREFIX = "service/subscription"
 DETAILS = {
+    'id': '429b436a-d0b3-4e3e-84e5-ac9204a33042',
     'user_id': 'a49b436a-d0b3-4e3e-84e5-ac9204a33042',
     'product': {
         'id': 'a49b436a-d0b3-4e3e-84e5-ac9204a330a5',
@@ -23,6 +24,7 @@ async def test_get_subscription_details(api_url, make_get_request):
     url = f"{api_url}/{PREFIX}/{_id}"
     response = await make_get_request(url)
     assert response.status == 200, "Couldn't get subscription_details"
+
     # NOTE I'm not sure if this is a safe way. Maybe use a deep distinction
     assert response.body == DETAILS
 
@@ -31,6 +33,7 @@ async def test_get_subscription_details(api_url, make_get_request):
 async def test_inactivate_subscription(api_url, make_delete_request):
     _id = "429b436a-d0b3-4e3e-84e5-ac9204a33042"
     url = f"{api_url}/{PREFIX}/{_id}"
+
     response = await make_delete_request(url)
     assert response.status == 200, "Couldn't inactivate subscription"
     assert response.body['state'] == 'inactive'
@@ -40,9 +43,11 @@ async def test_inactivate_subscription(api_url, make_delete_request):
 async def test_activate_subscription(api_url, make_post_request):
     _id = '429b436a-d0b3-4e3e-84e5-ac9204a33042'
     url = f"{api_url}/{PREFIX}/{_id}"
+
     response = await make_post_request(url)
     assert response.status == 200, "Couldn't get activate subscription"
     assert response.body['state'] == 'active'
+
     end_data = datetime.now() + timedelta(days=30)
     assert response.body['end_date'] == f"{end_data:%Y-%m-%d}"
 

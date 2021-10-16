@@ -53,6 +53,9 @@ async def get_current_user(token: HTTPAuthorizationCredentials = Depends(oauth_s
         headers={"WWW-Authenticate": "Bearer"},
     )
 
+    if not token:
+        raise exception
+
     try:
         # FIXME use get_public_key instead settings.auth.secret_key
         payload = jwt.decode(token.credentials,

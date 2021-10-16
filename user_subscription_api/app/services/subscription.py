@@ -16,9 +16,6 @@ logger = logging.getLogger(__name__)
 
 class SubscriptionService(CRUDBase):
 
-    async def get_by_user_id(self, _id: Any):
-        return self.db.query(self.model).filter(self.model.user_id == _id).first()
-
     async def change_state(self, _id: Any, state: str) -> Optional[Subscription]:
         db_obj = await self.get(_id)
         if not db_obj:
@@ -27,9 +24,6 @@ class SubscriptionService(CRUDBase):
         db_obj.state = state
         self.db.commit()
         return db_obj
-
-    async def cancel(self, _id: str) -> Optional[Subscription]:
-        return await self.change_state(_id, SubscriptionState.CANCELLED)
 
     async def deactivate(self, _id: str) -> Optional[Subscription]:
         return await self.change_state(_id, SubscriptionState.INACTIVE)
@@ -58,4 +52,3 @@ class SubscriptionService(CRUDBase):
 def get_subscription_service(
         db: Session = Depends(get_db)) -> SubscriptionService:
     return SubscriptionService(db, Subscription)
-
