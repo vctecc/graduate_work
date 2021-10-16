@@ -48,12 +48,18 @@ class BackoffSettings(BaseSettings):
     max_value: int = Field(5, env="BACKOFF_MAX_VALUE")
 
 
+class AuthSettings(BaseSettings):
+    algorithm: str = Field("HS256", env="AUTH_ALGORITHM")  # FIXME use RS256
+    secret_key: Optional[str] = "super-secret"  # FIXME get key from auth service
+
+
 class ProjectSettings(BaseSettings):
     project_name: str = "Subscription API"
     debug: bool = True
     database = DataBaseSettings()
     cache = CacheSettings()
     backoff = BackoffSettings()
+    auth = AuthSettings()
 
 
 settings = ProjectSettings()

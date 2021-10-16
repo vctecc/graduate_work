@@ -11,10 +11,6 @@ from .config import settings
 logger = logging.getLogger(__name__)
 oauth_schema = HTTPBearer()
 
-# FIXME remove after debug
-SECRET_KEY = "09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7"
-ALGORITHM = "HS256"
-
 
 class GetPubKeyError(Exception):
     pass
@@ -56,16 +52,16 @@ async def get_current_user(token: HTTPAuthorizationCredentials = Depends(oauth_s
         detail="Could not validate credentials",
         headers={"WWW-Authenticate": "Bearer"},
     )
+
     try:
-        payload = jwt.decode(token.credentials, SECRET_KEY, algorithms=[ALGORITHM])
+        # FIXME use get_public_key instead settings.auth.secret_key
+        payload = jwt.decode(token.credentials,
+                             settings.auth.secret_key,
+                             algorithms=[settings.auth.algorithm])
     except JWTError:
         raise exception
 
-    # FIXME???
-    user_id: str = payload.get("sub")
-    if user_id is None:
+    try:
+        return User(payload)
+    except KeyError:
         raise exception
-
-    return User(payload)
-
-
