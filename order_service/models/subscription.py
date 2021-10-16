@@ -1,5 +1,11 @@
-from .paid_facility import PaidFacility
+from pydantic import BaseModel
 
 
-class Subscription(PaidFacility):
-    pass
+from .product import Product
+
+
+class Subscription(BaseModel):
+    order_id: str
+    user_id: str
+    subscription_id: str
+    product: Product
