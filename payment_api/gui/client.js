@@ -1,18 +1,18 @@
 // A reference to Stripe.js initialized with your real test publishable API key.
 var stripe = Stripe(
-  "sk_test_51JgyKcEZwW9AoJC2MGWJoxsNrzIbA9bDCigTsDfSfJh8vubWxS1tGaDKdIlxLAAk6CJ0aTyd1a1Xoe5cK6PcAdSE00Aycq2uCP"
+  "pk_test_51JgyKcEZwW9AoJC20OKIRIWbwWW0Fibb8xXpGdlitepq1qRILsWIfae8NJk1TLgNs7JuzYqjl35qcSsE14GJaq840043PWctbH"
 );
 
 // The items the customer wants to buy
 var purchase = {
-  "product_id": "283f179c-5cac-43fc-a246-8f6670a26b4d",
-  "email": "example@admin.com",
-  "payment_system": "stripe"
+  "product": "283f179c-5cac-43fc-a246-8f6670a26b4d",
+  "currency": "rub",
+  "amount": 10000
 };
 
 // Disable the button until we have Stripe set up on the page
 document.querySelector("button").disabled = true;
-fetch("/api/v1/new_payment", {
+fetch("http://localhost:8000/v1/payments/new", {
   method: "POST",
   headers: {
     "Content-Type": "application/json",

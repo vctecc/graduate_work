@@ -3,6 +3,7 @@ import logging
 import uvicorn as uvicorn
 from fastapi import FastAPI
 from fastapi.responses import ORJSONResponse
+from fastapi.middleware.cors import CORSMiddleware
 
 from api.v1 import payment
 from core import config
@@ -27,8 +28,19 @@ async def shutdown():
     pass
 
 
-app.include_router(payment.router, prefix="/api/v1/payment", tags=["payment"])
+app.include_router(payment.router, prefix="/v1", tags=["payment"])
 
+origins = [
+    "*",
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 if __name__ == '__main__':
     reload = DEBUG
