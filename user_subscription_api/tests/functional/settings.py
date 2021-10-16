@@ -1,0 +1,7 @@
+import os
+
+API_HOST = os.getenv("USER_SUBSCRIPTIONS_API_HOST", "localhost")
+API_PORT = os.getenv("USER_SUBSCRIPTIONS_API_PORT", "8000")
+
+API_SERVICE_URL = f"{API_HOST}:{API_PORT}"
+API_VERSION = "v1"
