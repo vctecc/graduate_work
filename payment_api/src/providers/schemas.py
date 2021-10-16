@@ -3,7 +3,7 @@ from src.schemas.base import AbstractSchema
 
 class ProviderPayment(AbstractSchema):
     amount: int
-    currency: str = "rub"
+    currency: str = "RUB"
     customer: str
 
 
