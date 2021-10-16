@@ -35,7 +35,7 @@ def init_db():
             "id": "a49b436a-d0b3-4e3e-84e5-ac9204a330a5",
             "name": "Rick and Morty",
             "description": "Adult animated science fiction sitcom.",
-            "price": 200,
+            "price": 20000,
             "currency_code": "RUB",
             "period": 30,
             "is_active": True

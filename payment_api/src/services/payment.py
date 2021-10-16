@@ -80,19 +80,22 @@ class PaymentService(object):
         return await self.db.get(Payment, payment_id)
 
     async def get_processing(self) -> list[Payment]:
-        proccessing_payments = await self.db.execute(
+        processing_payments = await self.db.execute(
             select(
                 Payment.customer_id, Payment.invoice_id, Payment.status
             ).where(
                 Payment.status == PaymentState.PROCESSING
             )
         )
-        return proccessing_payments.all()
+        return processing_payments.all()
 
     async def update_status(self, payment_id, status: PaymentState):
         payment = await self.get(payment_id)
         payment.status = status
         await self.db.commit()
+
+    async def accept_payment(self, payment_id):
+        await self.update_status(payment_id, PaymentState.PAID)
 
 
 def get_payment_auth_service(
