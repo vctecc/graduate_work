@@ -4,8 +4,8 @@ import uvicorn
 from fastapi import FastAPI
 from fastapi.responses import ORJSONResponse
 
-from api.v1 import product_router, service_router, user_router
-from core.config import LOG_CONFIG, settings
+from app.api.v1 import product_router, service_router, user_router
+from app.core.config import LOG_CONFIG, settings
 from tags import tags_metadata
 
 app = FastAPI(
@@ -37,7 +37,7 @@ if __name__ == "__main__":
     uvicorn.run(
         "main:app",
         host="0.0.0.0",
-        port=8000,
+        port=8001,
         log_config=LOG_CONFIG,
         log_level=logging.DEBUG,
         reload=settings.debug,

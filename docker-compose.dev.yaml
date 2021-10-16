@@ -1,19 +1,38 @@
 version: '3.8'
 services:
 
+  payment_api:
+    extends:
+      file: docker-compose.yaml
+      service: payment_api
+    ports:
+      - "8000:8000"
+    env_file:
+      - dev.env
+
+  subscription_api:
+    extends:
+      file: docker-compose.yaml
+      service: subscription_api
+    ports:
+      - "8001:8001"
+    env_file:
+      - dev.env
+
+
+  postgres:
+    extends:
+      file: docker-compose.yaml
+      service: postgres
+    ports:
+      - "5432:5432"
+    env_file:
+      - dev.env
+
   redis:
     extends:
       file: docker-compose.yaml
       service: redis
-
-  postgres:
-    environment:
-      - POSTGRES_MULTIPLE_DBS
-      - POSTGRES_USER
-      - POSTGRES_PASSWORD
-    extends:
-      file: docker-compose.yaml
-      service: postgres
 
   rabbit:
     extends:

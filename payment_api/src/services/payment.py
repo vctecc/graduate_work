@@ -4,10 +4,9 @@ from sqlalchemy.orm import Session
 
 from src.core.auth import auth
 from src.db.session import get_db
-from src.models.payments import Payment, PaymentState
-from src.providers import AbstractProvider, ProviderPayment, ProviderPaymentResult, get_default_provider
-from src.schemas import NewPaymentSchema, CustomerSchema
-from src.schemas.payment import NewPaymentResult
+from src.models import Payment, PaymentState, Customer
+from src.providers import AbstractProvider, ProviderPayment, get_default_provider
+from src.schemas import NewPaymentSchema, NewPaymentResult
 from src.services.subscriptions import SubscriptionService, get_subscriptions_service
 
 
@@ -29,22 +28,35 @@ class PaymentAuthenticatedService(object):
         self.provider = provider
         self.subscriptions = subscriptions
 
-    async def get_customer(self) -> CustomerSchema:
-        customer = await self.subscriptions.get_customer(self.user_id)
+    async def get_customer(self) -> Customer:
+        customer = await self.db.execute(
+            select(
+                Customer.id, Customer.customer_id
+            ).where(
+                Customer.user_id == self.user_id
+            )
+        )
+        customer = customer.first()
         if not customer:
-            customer = await self.provider.create_customer()
+            provider_customer = await self.provider.create_customer()
+            customer = Customer(
+                user_id=self.user_id,
+                customer_id=provider_customer.id,
+            )
+            self.db.add(customer)
+            await self.db.commit()
 
         return customer
 
     async def new_payment(self, payment: NewPaymentSchema) -> NewPaymentResult:
 
         customer = await self.get_customer()
-        price = await self.subscriptions.get_product_price(payment.product)
+        product = await self.subscriptions.get_product(payment.product)
 
         provider_payment = ProviderPayment(
-            amount=price,
+            amount=product.price,
             currency=payment.currency,
-            customer=customer.id
+            customer=customer.customer_id
         )
         invoice = await self.provider.create_payment(provider_payment)
 

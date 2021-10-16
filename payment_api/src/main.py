@@ -1,17 +1,16 @@
 import logging
 
-import uvicorn as uvicorn
+import uvicorn
 from fastapi import FastAPI
 from fastapi.responses import ORJSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 
-from api.v1 import payment
-from core import config
-from core.config import DEBUG
-from core.logger import LOGGING
+from src.api.v1 import payment
+from src.core.config import settings
+from src.core.logger import LOGGING
 
 app = FastAPI(
-    title=config.PROJECT_NAME,
+    title=settings.project_name,
     docs_url="/api/openapi",
     openapi_url="/api/openapi.json",
     default_response_class=ORJSONResponse,
@@ -43,7 +42,7 @@ app.add_middleware(
 )
 
 if __name__ == '__main__':
-    reload = DEBUG
+    reload = settings.debug
     uvicorn.run(
         "main:app",
         host="0.0.0.0",
