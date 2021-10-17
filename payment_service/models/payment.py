@@ -1,4 +1,14 @@
+import enum
+
 from pydantic import BaseModel
+
+
+class PaymentState(enum.Enum):
+    DRAFT = "draft"
+    PROCESSING = "processing"
+    PAID = "paid"
+    CANCELED = "canceled"
+    ERROR = "error"
 
 
 class Payment(BaseModel):

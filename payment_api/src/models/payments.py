@@ -1,5 +1,5 @@
 import enum
-from sqlalchemy import Column, String, Integer, Enum, ForeignKey
+from sqlalchemy import Column, String, Enum, ForeignKey
 from src.models.base import AbstractModel
 
 
@@ -8,6 +8,7 @@ class PaymentState(enum.Enum):
     PROCESSING = "processing"
     PAID = "paid"
     ERROR = "error"
+    CANCELED = "canceled"
 
 
 class Payment(AbstractModel):

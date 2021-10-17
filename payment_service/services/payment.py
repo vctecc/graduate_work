@@ -21,5 +21,10 @@ class PaymentService:
         logging.info(f"Got processing payments: {processing_payments}")
         return processing_payments
 
-    def update_payment_status(self, payment_id, payment_status):
-        logging.info(f"Updated payment status for {payment_id} to {payment_status}")
+    def update_status(self, payment_id: str, status: PaymentState):
+        if status == PaymentState.PROCESSING:
+            return
+
+        url = f'{self.settings.url}/payments/{payment_id}/status'
+        requests.patch(url, params={'status': status.value})
+        logging.info(f"Updated payment status for {payment_id} to {status.value}")
