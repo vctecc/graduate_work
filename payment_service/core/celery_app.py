@@ -1,8 +1,20 @@
 from celery import Celery
+from datetime import timedelta
 
-from core.config import BROKER_URL, CELERYBEAT_SCHEDULE
+from .config import settings
 
 
-app = Celery('payment_service', broker=BROKER_URL,
-             include=['tasks'])
+app = Celery('payment_service', broker=settings.broker_url, include=['tasks'])
+
+SCHEDULE = timedelta(seconds=30)
+
+CELERYBEAT_SCHEDULE = {
+    'handle_pending_payments': {
+        'task': 'handle_pending_payments',
+        'schedule': SCHEDULE,
+        'options': {'queue': 'payments'},
+        'args': ()
+    },
+}
+
 app.conf.beat_schedule = CELERYBEAT_SCHEDULE
