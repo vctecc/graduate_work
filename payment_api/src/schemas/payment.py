@@ -3,6 +3,7 @@ from src.schemas import AbstractSchema
 
 
 class PaymentSchema(AbstractSchema):
+    id: str
     customer_id: str
     invoice_id: str
     status: PaymentState

@@ -1,22 +1,23 @@
 import logging
-from typing import Tuple
-from urllib.parse import urljoin
+from typing import List
 
 import requests
 
-from models.payment import Payment
+from models.payment import Payment, PaymentState
+
+from core.config import PaymentsSettings
 
 
 class PaymentService:
-    def __init__(self, url):
-        self.base_api_url = url
+    def __init__(self, settings: PaymentsSettings):
+        self.settings = settings
 
-    def get_processing_payments(self) -> Tuple[Payment]:
-        url = urljoin(self.base_api_url, 'payment/')
-        response = requests.get(url, params={"status": "Processing"})
-        response.raise_for_status()
+    def processing_payments(self) -> List[Payment]:
+        url = f'{self.settings.url}/payments/processing'
+        logging.info(url)
+        response = requests.get(url)
         data = response.json()
-        processing_payments = tuple(Payment(**item) for item in data)
+        processing_payments = [Payment(**item) for item in data]
         logging.info(f"Got processing payments: {processing_payments}")
         return processing_payments
 

@@ -82,7 +82,7 @@ class PaymentService(object):
     async def get_processing(self) -> list[Payment]:
         processing_payments = await self.db.execute(
             select(
-                Payment.customer_id, Payment.invoice_id, Payment.status
+                Payment.id, Payment.customer_id, Payment.invoice_id, Payment.status
             ).where(
                 Payment.status == PaymentState.PROCESSING
             )
