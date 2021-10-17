@@ -158,6 +158,12 @@ class PaymentService(object):
         payment.status = PaymentState.PAID
         await self.db.commit()
 
+        subscription = SubscriptionSchema(
+            user_id=payment.user_id,
+            product=payment.product_id,
+        )
+        await self.subscriptions.add_subscription(subscription)
+
 
 def get_payment_auth_service(
         db: Session = Depends(get_db),
