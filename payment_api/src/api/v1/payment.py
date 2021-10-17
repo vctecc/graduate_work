@@ -8,7 +8,7 @@ from src.schemas import NewPaymentSchema, PaymentSchema, NewPaymentResult
 router = APIRouter()
 
 
-@router.post("/payments/new", response_model=ProviderPaymentResult)
+@router.post("/payments/new", response_model=ProviderPaymentResult, status_code=201)
 async def new_payment(
         payment: NewPaymentSchema,
         payment_service: PaymentAuthenticatedService = Depends(get_payment_auth_service)
