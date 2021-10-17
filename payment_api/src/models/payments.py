@@ -15,6 +15,7 @@ class Payment(AbstractModel):
     __tablename__ = "payments"
 
     invoice_id = Column(String)
+    product_id = Column(String)
     customer_id = Column(ForeignKey("customers.id"))
     status = Column(Enum(PaymentState))
 

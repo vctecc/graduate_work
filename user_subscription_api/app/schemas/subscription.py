@@ -8,6 +8,11 @@ from app.models.subscription import SubscriptionState
 from .product import Product
 
 
+class NewSubscription(BaseModel):
+    user_id: UUID
+    product: Product
+
+
 class SubscriptionDetails(BaseModel):
     user_id: UUID
     product: Product

@@ -6,8 +6,8 @@ from src.core.auth import auth
 from src.db.session import get_db
 from src.models import Payment, PaymentState, Customer
 from src.providers import AbstractProvider, ProviderPayment, get_default_provider
-from src.schemas import NewPaymentSchema, NewPaymentResult
-from src.schemas.payment import AddPaymentSchema
+from src.schemas.payment import AddPaymentSchema, NewPaymentSchema, NewPaymentResult, PaymentSchema
+from src.schemas.subscriptions import SubscriptionSchema
 from src.services.subscriptions import SubscriptionService, get_subscriptions_service
 
 
@@ -65,8 +65,9 @@ class PaymentAuthenticatedService(object):
         invoice = await self.provider.create_payment(provider_payment)
 
         payment_db = Payment(
-            customer_id=customer.id,
+            customer_id=customer.customer_id,
             invoice_id=invoice.id,
+            product_id=product.id,
             status=PaymentState.PROCESSING
         )
         self.db.add(payment_db)
@@ -81,9 +82,11 @@ class PaymentService(object):
             self,
             db: Session,
             provider: AbstractProvider,
+            subscriptions: SubscriptionService,
     ):
         self.db = db
         self.provider = provider
+        self.subscriptions = subscriptions
 
     async def get_payment(self, payment_id: int) -> Payment:
         return await self.db.get(Payment, payment_id)
@@ -115,35 +118,52 @@ class PaymentService(object):
         payment_db = Payment(
             customer_id=customer.id,
             invoice_id=invoice.id,
-            status=PaymentState.PROCESSING
+            product_id=payment.product_id,
+            status=PaymentState.PROCESSING,
         )
         self.db.add(payment_db)
         await self.db.commit()
 
-    async def get_processing(self) -> list[Payment]:
+    async def get_processing(self) -> list[PaymentSchema]:
         processing_payments = await self.db.execute(
             select(
-                Payment.id, Payment.customer_id, Payment.invoice_id, Payment.status
+                Payment.id,
+                Payment.invoice_id,
+                Payment.product_id,
+                Payment.status,
+                Customer.user_id,
+                Customer.provider_customer_id,
+            ).outerjoin(
+                Customer, Payment.customer_id == Customer.id
             ).where(
                 Payment.status == PaymentState.PROCESSING
             )
         )
         return processing_payments.all()
 
-    async def update_status(self, payment_id, status: PaymentState):
-        payment = await self.get_payment(payment_id)
-        payment.status = status
+    async def update_status(self, payment: PaymentSchema):
+        payment_db = await self.get_payment(payment.id)
+        payment_db.status = payment.status
         await self.db.commit()
 
+        if payment.status == PaymentState.PAID:
+            subscription = SubscriptionSchema(
+                user_id=payment.user_id,
+                product=payment.product_id,
+            )
+            await self.subscriptions.add_subscription(subscription)
+
     async def accept_payment(self, payment_id):
-        await self.update_status(payment_id, PaymentState.PAID)
+        payment = await self.get_payment(payment_id)
+        payment.status = PaymentState.PAID
+        await self.db.commit()
 
 
 def get_payment_auth_service(
         db: Session = Depends(get_db),
         user_id: str = "",
         provider: AbstractProvider = Depends(get_default_provider),
-        subscriptions: SubscriptionService = Depends(get_subscriptions_service)
+        subscriptions: SubscriptionService = Depends(get_subscriptions_service),
 ):
     return PaymentAuthenticatedService(
         db=db,
@@ -156,5 +176,10 @@ def get_payment_auth_service(
 def get_payment_service(
         db: Session = Depends(get_db),
         provider: AbstractProvider = Depends(get_default_provider),
+        subscriptions: SubscriptionService = Depends(get_subscriptions_service),
 ):
-    return PaymentService(db, provider)
+    return PaymentService(
+        db=db,
+        provider=provider,
+        subscriptions=subscriptions
+    )

@@ -41,10 +41,9 @@ async def get_processing_payments(
     return processing
 
 
-@router.patch("/payments/{payment_id}/status", )
+@router.patch("/payments/update_status", )
 async def update_payment_status(
-        payment_id: int,
-        status: PaymentState,
+        payment: PaymentSchema,
         payment_service: PaymentService = Depends(get_payment_service),
 ) -> None:
-    await payment_service.update_status(payment_id, status)  # TODO: exception
+    await payment_service.update_status(payment)  # TODO: exception

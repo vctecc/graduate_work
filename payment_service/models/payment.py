@@ -13,6 +13,11 @@ class PaymentState(enum.Enum):
 
 class Payment(BaseModel):
     id: str
-    customer_id: str
+    provider_customer_id: str
     invoice_id: str
-    status: str
+    product_id: str
+    user_id: str
+    status: PaymentState
+
+    class Config:
+        use_enum_values = True

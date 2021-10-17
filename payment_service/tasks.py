@@ -22,6 +22,6 @@ class BaseTaskWithRetry(Task, ABC):
 def handle_pending_payments():
     """Get pending payments from DB, acknowledge their status and update payment in DB"""
     for payment in payment_service.processing_payments():
-        status = provider.acknowledge_payment_status(payment.invoice_id)
-        payment_service.update_status(payment.id, status)
+        payment.status = provider.acknowledge_payment_status(payment.invoice_id)
+        payment_service.update_status(payment)
 
