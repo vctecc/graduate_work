@@ -1,17 +1,13 @@
-from abc import ABC
-
 from celery import Task
 
 from core.celery_app import app
 from core.config import SUBSCRIPTION_API_URL, PAYMENTS_API_URL
 from services.subscription import SubscriptionService
 from services.payment import PaymentService
-from providers.stripe import Stripe
 
 
 subscription_service = SubscriptionService(SUBSCRIPTION_API_URL)
 payment_service = PaymentService(PAYMENTS_API_URL)
-provider = Stripe()
 
 
 class BaseTaskWithRetry(Task): # noqa
@@ -29,5 +25,3 @@ def handle_payment_orders(self):
 
     for subscription in pending_subscriptions:
         payment_service.register_payment(subscription)
-        provider.send_payment_request(subscription.provider_user_id, subscription.payment_amount)
-
