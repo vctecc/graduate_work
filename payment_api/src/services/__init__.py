@@ -1,2 +1,1 @@
 from .payment import PaymentService, get_payment_auth_service, PaymentAuthenticatedService, get_payment_service
-from .subscriptions import SubscriptionService, get_subscriptions_service

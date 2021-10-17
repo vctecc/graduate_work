@@ -1,7 +1,15 @@
-# Проектная работа: диплом
+# Биллинг
+
 ## Запуск инфраструктуры для разработки
 ```shell
-docker compose -f docker-compose.dev.yaml --env-file dev.env up --build
+make build_billing_dev
+```
+
+## Инициаилазция баз
+```shell
+docker exec -it postgres sh
+cd docker-entrypoint-initdb.d/
+sh init_multitype_db.sh
 ```
 
 ## Локальный запуск user subscription api
