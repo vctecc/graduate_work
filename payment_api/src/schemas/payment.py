@@ -13,9 +13,16 @@ class PaymentSchema(AbstractSchema):
         use_enum_values = True
 
 
+class AddPaymentSchema(AbstractSchema):
+    user_id: str
+    product: str
+    amount: str
+    currency: str = "RUB"
+
+
 class NewPaymentSchema(AbstractSchema):
     product: str
-    currency: str
+    currency: str = "RUB"
 
 
 class NewPaymentResult(AbstractSchema):
