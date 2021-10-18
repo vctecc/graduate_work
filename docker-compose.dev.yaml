@@ -20,6 +20,10 @@ services:
       - dev.env
 
   postgres:
+    environment:
+      - POSTGRES_MULTIPLE_DBS
+      - POSTGRES_USER
+      - POSTGRES_PASSWORD
     extends:
       file: docker-compose.yaml
       service: postgres

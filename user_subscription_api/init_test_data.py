@@ -61,6 +61,14 @@ def init_db():
             "start_date": start_date,
             "end_date": start_date + timedelta(days=30),
         },
+        {
+            "id": "429b436a-d042-4e3e-84e5-789204a33042",
+            "user_id": "a49b436a-d0b3-4e3e-84e5-ac9204a33042",
+            "product_id": "a49b436a-d0b3-4e3e-84e5-ac9204a330a5",
+            "state": "active",
+            "start_date": start_date,
+            "end_date": start_date + timedelta(days=30),
+        },
     )
 
     db_add(Subscription, subscriptions)

@@ -1,29 +1,18 @@
 from decimal import Decimal
-from uuid import UUID
-
-from pydantic import BaseModel
+from app.schemas.base import BaseSchema
 
 
-class Product(BaseModel):
-    id: UUID
+class Product(BaseSchema):
     price: Decimal
     currency_code: str
     period: int
     is_active: bool
 
-    class Config:
-        orm_mode = True
 
-
-class ProductDetail(BaseModel):
-    id: UUID
+class ProductDetail(BaseSchema):
     name: str
     description: str
     price: Decimal
     currency_code: str
     period: int
     is_active: bool
-
-    class Config:
-        orm_mode = True
-
