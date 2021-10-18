@@ -1,29 +1,21 @@
 import datetime
 from uuid import UUID
 
-from pydantic import BaseModel
-
+from app.schemas.base import BaseSchema
+from app.schemas.product import Product
 from app.models.subscription import SubscriptionState
 
-from .product import Product
 
-
-class SubscriptionDetails(BaseModel):
+class SubscriptionDetails(BaseSchema):
     user_id: UUID
     product: Product
     start_date: datetime.date
     end_date: datetime.date
     state: SubscriptionState
 
-    class Config:
-        orm_mode = True
 
-
-class SubscriptionPreview(BaseModel):
+class SubscriptionPreview(BaseSchema):
     product_id: UUID
     start_date: datetime.date
     end_date: datetime.date
     state: SubscriptionState
-
-    class Config:
-        orm_mode = True
