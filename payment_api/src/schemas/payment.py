@@ -4,7 +4,6 @@ from src.schemas import AbstractSchema
 
 class PaymentSchema(AbstractSchema):
     id: int
-    provider_customer_id: str
     invoice_id: str
     product_id: str
     user_id: str

@@ -36,7 +36,7 @@ class PaymentAuthenticatedService(object):
     async def get_customer(self) -> Customer:
         customer = await self.db.execute(
             select(
-                Customer.id, Customer.customer_id
+                Customer.id, Customer.provider_customer_id
             ).where(
                 Customer.user_id == self.user_id
             )
@@ -46,10 +46,10 @@ class PaymentAuthenticatedService(object):
             provider_customer = await self.provider.create_customer()
             customer = Customer(
                 user_id=self.user_id,
-                customer_id=provider_customer.id,
+                provider_customer_id=provider_customer.id,
             )
             self.db.add(customer)
-            await self.db.commit()
+            await self.db.flush()
 
         return customer
 
@@ -60,12 +60,12 @@ class PaymentAuthenticatedService(object):
         provider_payment = ProviderPayment(
             amount=product.price,
             currency=payment.currency,
-            customer=customer.customer_id
+            customer=customer.provider_customer_id
         )
         invoice = await self.provider.create_payment(provider_payment)
 
         payment_db = Payment(
-            customer_id=customer.customer_id,
+            customer_id=customer.id,
             invoice_id=invoice.id,
             product_id=product.id,
             status=PaymentState.PROCESSING
@@ -94,7 +94,7 @@ class PaymentService(object):
     async def get_customer(self, user_id: str) -> Customer:
         customer = await self.db.execute(
             select(
-                Customer.id, Customer.customer_id
+                Customer.id, Customer.provider_customer_id
             ).where(
                 Customer.user_id == user_id
             )
@@ -114,6 +114,7 @@ class PaymentService(object):
             customer=customer.customer_id
         )
         invoice = await self.provider.create_payment(provider_payment)
+        # TODO: что если отправим на платеж и тут упадем?
 
         payment_db = Payment(
             customer_id=customer.id,
@@ -132,7 +133,6 @@ class PaymentService(object):
                 Payment.product_id,
                 Payment.status,
                 Customer.user_id,
-                Customer.provider_customer_id,
             ).outerjoin(
                 Customer, Payment.customer_id == Customer.id
             ).where(
@@ -144,7 +144,6 @@ class PaymentService(object):
     async def update_status(self, payment: PaymentSchema):
         payment_db = await self.get_payment(payment.id)
         payment_db.status = payment.status
-        await self.db.commit()
 
         if payment.status == PaymentState.PAID:
             subscription = SubscriptionSchema(
@@ -152,6 +151,8 @@ class PaymentService(object):
                 product=payment.product_id,
             )
             await self.subscriptions.add_subscription(subscription)
+
+        await self.db.commit()
 
     async def accept_payment(self, payment_id):
         payment = await self.get_payment(payment_id)

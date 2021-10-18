@@ -3,7 +3,7 @@ from sqlalchemy import Column, String, Enum, ForeignKey
 from src.models.base import AbstractModel
 
 
-class PaymentState(enum.Enum):
+class PaymentState(str, enum.Enum):
     DRAFT = "draft"
     PROCESSING = "processing"
     PAID = "paid"

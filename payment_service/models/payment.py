@@ -3,7 +3,7 @@ import enum
 from pydantic import BaseModel
 
 
-class PaymentState(enum.Enum):
+class PaymentState(str, enum.Enum):
     DRAFT = "draft"
     PROCESSING = "processing"
     PAID = "paid"
@@ -13,7 +13,6 @@ class PaymentState(enum.Enum):
 
 class Payment(BaseModel):
     id: str
-    provider_customer_id: str
     invoice_id: str
     product_id: str
     user_id: str
