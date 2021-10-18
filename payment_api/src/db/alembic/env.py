@@ -15,7 +15,7 @@ sys.path.append(BASE_DIR)
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
-from src.core.config import SQLALCHEMY_DATABASE_URL
+from src.core.config import settings
 
 config = context.config
 
@@ -25,7 +25,7 @@ fileConfig(config.config_file_name)
 
 config.set_main_option(
     'sqlalchemy.url',
-    SQLALCHEMY_DATABASE_URL
+    settings.database.sqlalchemy_uri
 )
 
 # add your model's MetaData object here
@@ -33,6 +33,7 @@ config.set_main_option(
 from src.db.session import Base
 from src.models.payments import Payment
 from src.models.payments import PaymentState
+from src.models.customer import Customer
 target_metadata = Base.metadata
 
 

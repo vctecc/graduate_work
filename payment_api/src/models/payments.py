@@ -1,5 +1,5 @@
 import enum
-from sqlalchemy import Column, String, Enum
+from sqlalchemy import Column, String, Integer, Enum, ForeignKey
 from src.models.base import AbstractModel
 
 
@@ -14,6 +14,6 @@ class Payment(AbstractModel):
     __tablename__ = "payments"
 
     invoice_id = Column(String)
-    customer_id = Column(String)
+    customer_id = Column(ForeignKey("customers.id"))
     status = Column(Enum(PaymentState))
 

@@ -12,7 +12,7 @@ payment_service = PaymentService(PAYMENTS_API_URL)
 provider = Stripe()
 
 
-class BaseTaskWithRetry(Task, ABC):
+class BaseTaskWithRetry(Task): # noqa
     """ Handle connection errors."""
     autoretry_for = (ConnectionError,)
     retry_kwargs = {'max_retries': 5}
