@@ -26,7 +26,6 @@ async def get_user_subscriptions(
         raise HTTPException(status_code=HTTPStatus.NOT_FOUND,
                             detail=SUBSCRIPTION_NOT_FOUND)
 
-    print(subscriptions)
     return subscriptions
 
 

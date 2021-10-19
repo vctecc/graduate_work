@@ -15,7 +15,7 @@ class SubscriptionState(str, enum.Enum):
 
 class Subscription(TimeStampBase):
     user_id = RequiredColumn(UUID(as_uuid=True))
-    product_id = Column(UUID, ForeignKey("product.id"))
+    product_id = Column(UUID(as_uuid=True), ForeignKey("product.id"))
     product = relationship("Product", back_populates="subscriptions")
     state = Column(Enum(SubscriptionState), default=SubscriptionState.ACTIVE)
     start_date = RequiredColumn(DateTime)

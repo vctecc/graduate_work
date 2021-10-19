@@ -21,7 +21,6 @@ class ProductService(CRUDBase):
         return query.order_by(self.model.id).offset(skip).limit(limit).all()
 
 
-# FIXME use async
 @lru_cache()
 def get_product_service(db: Session = Depends(get_db)) -> ProductService:
     return ProductService(db, Product)

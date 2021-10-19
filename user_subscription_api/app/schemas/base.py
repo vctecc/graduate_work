@@ -1,4 +1,5 @@
 from uuid import UUID
+from typing import TypeVar
 
 import orjson
 from pydantic import BaseModel
@@ -17,3 +18,6 @@ class BaseSchema(BaseModel):
     class Meta:
         json_loads = orjson.loads
         json_dumps = orjson_dumps
+
+
+CreateSchemaType = TypeVar("CreateSchemaType", bound=BaseModel)
