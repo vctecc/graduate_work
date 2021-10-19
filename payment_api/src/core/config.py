@@ -35,14 +35,15 @@ class DataBaseSettings(BaseSettings):
             path=f"/{values.get('name') or ''}",
         )
 
+
 class SubscriptionsSettings(BaseSettings):
-    host: str = Field("127.0.0.1", env="SUBSCRIPTION_HOST")
+    host: str = Field("localhost", env="SUBSCRIPTION_HOST")
     port: str = Field('8001', env="SUBSCRIPTION_PORT")
     url: Optional[str] = None
 
     @validator("url", pre=True)
     def set_url(cls, v: Optional[str], values: Dict[str, Any]) -> str:
-        return f'{values["host"]}:{values["port"]}'
+        return f'http://{values["host"]}:{values["port"]}/api/v1'
 
 
 class ProjectSettings(BaseSettings):

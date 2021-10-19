@@ -1,14 +1,13 @@
-import traceback
+import logging
 from abc import ABC
-
 from celery import Task
 
 from core.celery_app import app
-from core.config import PAYMENTS_API_URL
+from core.config import settings
 from services.payment import PaymentService
 from providers.stripe import Stripe
 
-payment_service = PaymentService(PAYMENTS_API_URL)
+payment_service = PaymentService(settings.payments_api)
 provider = Stripe()
 
 
@@ -19,13 +18,10 @@ class BaseTaskWithRetry(Task): # noqa
     retry_backoff = True
 
 
-@app.task(name="handle_pending_payments", acks_late=True, bind=True, base=BaseTaskWithRetry)
-def handle_pending_payments(self):
+@app.task(name="handle_pending_payments", acks_late=True)
+def handle_pending_payments():
     """Get pending payments from DB, acknowledge their status and update payment in DB"""
-    processing_payments = payment_service.get_processing_payments()
-
-    for payment in processing_payments:
-        status = provider.acknowledge_payment_status(payment.provider_user_id)
-        if status != "Processing":
-            payment_service.update_payment_status(payment.id, status)
+    for payment in payment_service.processing_payments():
+        payment.status = provider.acknowledge_payment_status(payment.invoice_id)
+        payment_service.update_status(payment)
 

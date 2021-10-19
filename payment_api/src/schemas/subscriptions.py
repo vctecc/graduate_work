@@ -6,3 +6,7 @@ class ProductSchema(AbstractSchema):
     name: str
     price: int
 
+
+class SubscriptionSchema(AbstractSchema):
+    user_id: str
+    product: str

@@ -3,8 +3,10 @@ from src.schemas import AbstractSchema
 
 
 class PaymentSchema(AbstractSchema):
-    customer_id: str
+    id: int
     invoice_id: str
+    product_id: str
+    user_id: str
     status: PaymentState
 
     class Config:
@@ -12,11 +14,19 @@ class PaymentSchema(AbstractSchema):
         use_enum_values = True
 
 
+class AddPaymentSchema(AbstractSchema):
+    user_id: str
+    product_id: str
+    amount: str
+    currency: str = "RUB"
+
+
 class NewPaymentSchema(AbstractSchema):
     product: str
-    currency: str
+    currency: str = "RUB"
 
 
 class NewPaymentResult(AbstractSchema):
     id: str
     client_secret: str
+

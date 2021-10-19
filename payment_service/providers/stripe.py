@@ -1,7 +1,10 @@
+import stripe
 import logging
-import random
 
+from core.config import settings
+from models.payment import PaymentState
 from .base import BaseProvider
+from .models import PaymentIntent
 
 
 class Stripe(BaseProvider):
@@ -11,8 +14,13 @@ class Stripe(BaseProvider):
         logging.info("Stripe got the payment request")
         return
 
-    def acknowledge_payment_status(self, provider_user_id: str, **kwargs) -> str:
-        statuses = ["success", "failed", "Processing"]  # TODO: replace strings with constants
-        status = random.choice(statuses)
-        logging.info(f"Stripe sent the payment status {status}")
-        return status
+    def acknowledge_payment_status(self, payment_id: str) -> PaymentState:
+
+        provider_payment = stripe.PaymentIntent.retrieve(
+            id=payment_id,
+            api_key=settings.stripe_secret_key
+        )
+        payment = PaymentIntent(**provider_payment)
+
+        logging.info(f"Stripe sent the payment {payment.id} status {payment.status}")
+        return payment.status
