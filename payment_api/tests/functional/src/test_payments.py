@@ -16,6 +16,15 @@ async def test_new_payment(api_url, headers, make_post_request):
 
 
 @pytest.mark.asyncio
+async def test_accept_payment(api_url, headers, make_patch_request):
+    response = await make_patch_request(
+        f"{api_url}/payments/pi_3Jm4MeEZwW9AoJC21RnYBpkI/accept",
+        headers=headers,
+    )
+    assert response.status == 200, "Couldn't accept payment."
+
+
+@pytest.mark.asyncio
 async def test_get_processing_payments(api_url, make_get_request):
     response = await make_get_request(f"{api_url}/payments/processing")
     assert response.status == 200, "Couldn't get processing payments."

@@ -47,3 +47,19 @@ async def update_payment_status(
         payment_service: PaymentService = Depends(get_payment_service),
 ) -> None:
     await payment_service.update_status(payment)  # TODO: exception
+
+
+@router.patch("/payments/{payment_id}/accept")
+async def update_payment_status(
+        payment_id: str,
+        payment_service: PaymentService = Depends(get_payment_service),
+) -> None:
+    await payment_service.accept_payment(payment_id)  # TODO: exception
+
+
+@router.patch("/payments/{payment_id}/error")
+async def update_payment_status(
+        payment_id: str,
+        payment_service: PaymentService = Depends(get_payment_service),
+) -> None:
+    await payment_service.error_payment(payment_id)  # TODO: exception

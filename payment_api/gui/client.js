@@ -90,12 +90,6 @@ var payWithCard = function (stripe, card, clientSecret) {
 // Shows a success message when the payment is complete
 var orderComplete = function (paymentIntentId) {
   loading(false);
-  // document
-  //   .querySelector(".result-message a")
-  //   .setAttribute(
-  //     "href",
-  //     "https://dashboard.stripe.com/test/payments/" + paymentIntentId
-  //   );
   document.querySelector(".result-message").classList.remove("hidden");
   document.querySelector("button").disabled = true;
 };
@@ -103,6 +97,7 @@ var orderComplete = function (paymentIntentId) {
 // Show the customer the error from Stripe if their card fails to charge
 var showError = function (errorMsgText) {
   loading(false);
+
   var errorMsg = document.querySelector("#card-error");
   errorMsg.textContent = errorMsgText;
   setTimeout(function () {

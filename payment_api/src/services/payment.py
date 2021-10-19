@@ -1,5 +1,5 @@
 from fastapi import Depends
-from sqlalchemy import select
+from sqlalchemy import select, update
 from sqlalchemy.orm import Session
 
 from src.core.auth import auth
@@ -16,6 +16,10 @@ class NotFound(BaseException):
 
 
 class CustomerNotFound(BaseException):
+    ...
+
+
+class PymentNotFound(BaseException):
     ...
 
 
@@ -91,6 +95,24 @@ class PaymentService(object):
     async def get_payment(self, payment_id: int) -> Payment:
         return await self.db.get(Payment, payment_id)
 
+    async def get_payment_by_invoice_id(self, invoice_id: str) -> Payment:
+        payment = await self.db.execute(
+            select(
+                Payment.id,
+                Payment.status,
+                Payment.product_id,
+                Customer.user_id,
+            ).outerjoin(
+                Customer, Payment.customer_id == Customer.id
+            ).where(
+                Payment.invoice_id == invoice_id
+            )
+        )
+        if not payment:
+            raise PymentNotFound
+
+        return payment.first()
+
     async def get_customer(self, user_id: str) -> Customer:
         customer = await self.db.execute(
             select(
@@ -154,16 +176,36 @@ class PaymentService(object):
 
         await self.db.commit()
 
-    async def accept_payment(self, payment_id):
-        payment = await self.get_payment(payment_id)
-        payment.status = PaymentState.PAID
-        await self.db.commit()
+    async def accept_payment(self, invoice_id):
+        await self.db.execute(
+            update(
+                Payment
+            ).values(
+                status=PaymentState.PAID
+            ).where(
+                Payment.invoice_id == invoice_id
+            )
+        )
 
+        payment = await self.get_payment_by_invoice_id(invoice_id)
         subscription = SubscriptionSchema(
             user_id=payment.user_id,
             product=payment.product_id,
         )
         await self.subscriptions.add_subscription(subscription)
+        await self.db.commit()
+
+    async def error_payment(self, invoice_id):
+        await self.db.execute(
+            update(
+                Payment
+            ).values(
+                status=PaymentState.PAID
+            ).where(
+                Payment.invoice_id == invoice_id
+            )
+        )
+        await self.db.commit()
 
 
 def get_payment_auth_service(
