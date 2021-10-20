@@ -6,7 +6,8 @@ from src.core.auth import auth
 from src.db.session import get_db
 from src.models import Payment, PaymentState, Customer
 from src.providers import AbstractProvider, ProviderPayment, get_default_provider
-from src.schemas.payment import AddPaymentSchema, NewPaymentSchema, NewPaymentResult, PaymentSchema
+from src.providers.schemas import ProviderPaymentCancel
+from src.schemas.payment import AddPaymentSchema, NewPaymentSchema, NewPaymentResult, PaymentSchema, PaymentCancel
 from src.schemas.subscriptions import SubscriptionSchema
 from src.services.subscriptions import SubscriptionService, get_subscriptions_service
 
@@ -113,6 +114,20 @@ class PaymentService(object):
 
         return payment.first()
 
+    async def get_last_payment(self, customer_id: int) -> Payment:
+        payment = await self.db.execute(
+            select(
+                Payment.id,
+                Payment.invoice_id,
+            ).where(
+                Payment.customer_id == customer_id
+            ).order_by(desc(Payment.id))
+        )
+        if not payment:
+            raise PymentNotFound
+
+        return payment.first()
+
     async def get_customer(self, user_id: str) -> Customer:
         customer = await self.db.execute(
             select(
@@ -206,6 +221,19 @@ class PaymentService(object):
             )
         )
         await self.db.commit()
+
+    async def cancel(self, cancel_info: PaymentCancel):
+
+        customer = await self.get_customer(cancel_info.user_id)
+        payment = await self.get_last_payment(customer.id)
+
+        provider_cancel = ProviderPaymentCancel(
+            amount=cancel_info.amount,
+            currency=cancel_info.currency,
+            customer=customer.provider_customer_id,
+            payment=payment.invoice_id
+        )
+        await self.provider.cancel(provider_cancel)
 
 
 def get_payment_auth_service(

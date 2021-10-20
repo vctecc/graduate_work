@@ -57,3 +57,18 @@ async def test_add_payment(api_url, headers, make_post_request):
         data=data
     )
     assert response.status == 201, "Couldn't add payment."
+
+
+@pytest.mark.asyncio
+async def test_cancel(api_url, make_patch_request):
+
+    data = {
+        "user_id": "",
+        "amount": 10000,
+        "currency": "RUB",
+    }
+    response = await make_patch_request(
+        f"{api_url}/payments/cancel",
+        data=data
+    )
+    assert response.status == 201, "Couldn't add payment."
