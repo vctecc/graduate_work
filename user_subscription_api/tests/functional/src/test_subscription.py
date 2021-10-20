@@ -7,7 +7,7 @@ DETAILS = {
     'user_id': 'a49b436a-d0b3-4e3e-84e5-ac9204a33042',
     'product': {
         'id': 'a49b436a-d0b3-4e3e-84e5-ac9204a330a5',
-        'price': 200,
+        'price': 20000,
         'currency_code': 'RUB',
         'period': 30,
         'is_active': True

@@ -6,7 +6,7 @@ DETAILS = {
     'user_id': 'a49b436a-d0b3-4e3e-84e5-ac9204a33042',
     'product': {
         'id': 'a49b436a-d0b3-4e3e-84e5-ac9204a330a5',
-        'price': 200,
+        'price': 20000,
         'currency_code': 'RUB',
         'period': 30,
         'is_active': True
@@ -23,7 +23,7 @@ async def test_user_get_subscriptions(headers, api_url, make_get_request):
     response = await make_get_request(url, headers=headers)
 
     assert response.status == 200, "Couldn't get user subscriptions"
-    assert len(response.body) == 3, "Incorrect number of subscriptions"
+    assert len(response.body) == 5, "Incorrect number of subscriptions"
 
 
 @pytest.mark.asyncio
@@ -34,6 +34,7 @@ async def test_user_get_subscription_details(headers, api_url, make_get_request)
     assert response.status == 200, "Couldn't get subscription_details"
 
     # NOTE I'm not sure if this is a safe way. Maybe use a deep distinction
+    print(response.body)
     assert response.body == DETAILS
 
 
