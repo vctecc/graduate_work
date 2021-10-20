@@ -11,8 +11,21 @@ from src.services.payment import CustomerNotFound
 router = APIRouter()
 
 
-@router.post("/payments", status_code=201)
+@router.post("/payments/new",
+             response_model=ProviderPaymentResult,
+             description='Проведение платежа с клиента.')
 async def new_payment(
+        payment: NewPaymentSchema,
+        payment_service: PaymentAuthenticatedService = Depends(get_payment_auth_service)
+) -> NewPaymentResult:
+    payment = await payment_service.new_payment(payment)
+    return payment
+
+
+@router.post("/payments",
+             status_code=201,
+             description='Создание платежа из других сервисов.')
+async def add_payment(
         payment: AddPaymentSchema,
         payment_service: PaymentService = Depends(get_payment_service)
 ):

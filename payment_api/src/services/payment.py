@@ -1,5 +1,5 @@
 from fastapi import Depends
-from sqlalchemy import select, update
+from sqlalchemy import select, update, desc
 from sqlalchemy.orm import Session
 
 from src.core.auth import auth
@@ -67,7 +67,7 @@ class PaymentAuthenticatedService(object):
             currency=payment.currency,
             customer=customer.provider_customer_id
         )
-        invoice = await self.provider.create_payment(provider_payment)
+        invoice = await self.provider.new_payment(provider_payment)
 
         payment_db = Payment(
             customer_id=customer.id,
@@ -148,7 +148,7 @@ class PaymentService(object):
         provider_payment = ProviderPayment(
             amount=payment.amount,
             currency=payment.currency,
-            customer=customer.customer_id
+            customer=customer.provider_customer_id
         )
         invoice = await self.provider.create_payment(provider_payment)
         # TODO: что если отправим на платеж и тут упадем?

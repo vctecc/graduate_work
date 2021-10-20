@@ -44,16 +44,15 @@ async def test_update_payment_status(api_url, make_patch_request):
 
 
 @pytest.mark.asyncio
-async def test_add_payment(api_url, headers, make_post_request):
+async def test_add_payment(api_url, make_post_request):
     data = {
         "user_id": "",
         "amount": 100000,
-        "product": "a49b436a-d0b3-4e3e-84e5-ac9204a330a5",
+        "product_id": "a49b436a-d0b3-4e3e-84e5-ac9204a330a5",
         "currency": "RUB",
     }
     response = await make_post_request(
         f"{api_url}/payments/",
-        headers=headers,
         data=data
     )
     assert response.status == 201, "Couldn't add payment."
