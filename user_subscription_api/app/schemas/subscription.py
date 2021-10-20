@@ -1,12 +1,12 @@
 import datetime
-from uuid import UUID
 from typing import Optional
+from uuid import UUID
 
 from pydantic import BaseModel
 
+from app.models.subscription import SubscriptionState
 from app.schemas.base import BaseSchema
 from app.schemas.product import Product
-from app.models.subscription import SubscriptionState
 
 
 class SubscriptionDetails(BaseSchema):

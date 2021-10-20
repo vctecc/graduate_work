@@ -9,6 +9,7 @@ from app.db import RequiredColumn, TimeStampBase
 
 class SubscriptionState(str, enum.Enum):
     ACTIVE = "active"
+    PRE_ACTIVATION = "pre-activation"
     INACTIVE = "inactive"
     CANCELLED = "cancelled"
 
