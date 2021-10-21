@@ -16,7 +16,6 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
@@ -28,7 +27,6 @@ DEBUG = False
 
 ALLOWED_HOSTS = []
 
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -39,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'subscriptions',
+    'payments',
 ]
 
 MIDDLEWARE = [
@@ -71,25 +70,33 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'config.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'OPTIONS': {
-            'options': '-c search_path=public'
-        },
         'NAME': os.environ.get('SUBSCRIPTIONS_DB', 'subscriptions'),
         'USER': os.environ.get('SUBSCRIPTIONS_DB_USER', 'postgres'),
         'PASSWORD': os.environ.get('SUBSCRIPTIONS_DB_PASSWORD', 'password'),
         'HOST': os.environ.get('SUBSCRIPTIONS_DB_HOST', '127.0.0.1'),
         'PORT': os.environ.get('SUBSCRIPTIONS_DB_PORT', 5432),
+        'OPTIONS': {
+            'options': '-c search_path=public'
+        },
+    },
+    'payments': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.environ.get('PAYMENTS_DB', 'payments'),
+        'USER': os.environ.get('PAYMENTS_DB_USER', 'postgres'),
+        'PASSWORD': os.environ.get('PAYMENTS_DB_PASSWORD', 'password'),
+        'HOST': os.environ.get('PAYMENTS_DB_HOST', '127.0.0.1'),
+        'PORT': os.environ.get('PAYMENTS_DB_PORT', 5432),
+        'OPTIONS': {
+            'options': '-c search_path=public'
+        },
     }
 }
-
-
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
@@ -109,7 +116,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/3.1/topics/i18n/
 
@@ -123,12 +129,12 @@ USE_L10N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
 
+STATIC_ROOT = '/config/static'
 
 LOGGING = {
     'version': 1,
