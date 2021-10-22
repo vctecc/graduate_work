@@ -11,4 +11,4 @@ WORKDIR /app/
 COPY Pipfile /app/
 
 RUN pipenv install --system --deploy --skip-lock
-ENTRYPOINT ["uvicorn", "/app/main:app", "--port", "8001", "--host", "0.0.0.0", "--reload"]
+ENTRYPOINT ["uvicorn", "app.main:app", "--port", "8001", "--host", "0.0.0.0", "--reload"]

@@ -8,6 +8,7 @@ ModelType = TypeVar("ModelType", bound=TimeStampBase)
 
 
 class CRUDBase:
+
     def __init__(self, db: Session, model: ClassVar):
         self.db = db
         self.model = model

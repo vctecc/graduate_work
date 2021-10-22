@@ -6,6 +6,11 @@ from app.schemas.product import Product
 from app.models.subscription import SubscriptionState
 
 
+class SubscriptionShort(BaseSchema):
+    user_id: UUID
+    product_id: UUID
+
+
 class SubscriptionDetails(BaseSchema):
     user_id: UUID
     product: Product

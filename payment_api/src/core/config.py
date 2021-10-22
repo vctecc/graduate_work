@@ -13,11 +13,11 @@ class PostgresDsnWithAsync(PostgresDsn):
 
 
 class DataBaseSettings(BaseSettings):
-    host: str = Field("127.0.0.1", env="POSTGRES_HOST")
-    port: str = Field('5432', env="POSTGRES_PORT")
+    host: str = Field("postgres", env="PAYMENTS_DB_HOST")
+    port: str = Field('5432', env="PAYMENTS_DB_PORT")
     name: str = Field("payments", env="PAYMENTS_DB")
-    user: str = Field("postgres", env="POSTGRES_USER")
-    password: str = Field("password", env="POSTGRES_PASSWORD")
+    user: str = Field("postgres", env="PAYMENTS_DB_USER")
+    password: str = Field("password", env="PAYMENTS_DB_PASSWORD")
 
     sqlalchemy_uri: Optional[str] = None
 

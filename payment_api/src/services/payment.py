@@ -20,7 +20,7 @@ class CustomerNotFound(BaseException):
     ...
 
 
-class PymentNotFound(BaseException):
+class PaymentNotFound(BaseException):
     ...
 
 
@@ -110,7 +110,7 @@ class PaymentService(object):
             )
         )
         if not payment:
-            raise PymentNotFound
+            raise PaymentNotFound
 
         return payment.first()
 
@@ -124,7 +124,7 @@ class PaymentService(object):
             ).order_by(desc(Payment.id))
         )
         if not payment:
-            raise PymentNotFound
+            raise PaymentNotFound
 
         return payment.first()
 
@@ -185,7 +185,7 @@ class PaymentService(object):
         if payment.status == PaymentState.PAID:
             subscription = SubscriptionSchema(
                 user_id=payment.user_id,
-                product=payment.product_id,
+                product_id=payment.product_id,
             )
             await self.subscriptions.add_subscription(subscription)
 
@@ -205,7 +205,7 @@ class PaymentService(object):
         payment = await self.get_payment_by_invoice_id(invoice_id)
         subscription = SubscriptionSchema(
             user_id=payment.user_id,
-            product=payment.product_id,
+            product_id=payment.product_id,
         )
         await self.subscriptions.add_subscription(subscription)
         await self.db.commit()

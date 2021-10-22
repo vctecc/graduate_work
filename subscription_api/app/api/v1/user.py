@@ -6,7 +6,7 @@ from fastapi import APIRouter, Depends, HTTPException
 
 from app.schemas.subscription import SubscriptionPreview, SubscriptionDetails
 from app.services.user import (UserService, get_user_service)
-from core import User, get_current_user
+from app.core import User, get_current_user
 
 from .error_messag import SUBSCRIPTION_NOT_FOUND
 

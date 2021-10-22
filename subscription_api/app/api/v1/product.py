@@ -3,9 +3,9 @@ from typing import List, Optional
 
 from fastapi import APIRouter, Depends, HTTPException, Query
 
-from core import User, get_current_user
-from schemas import Product, ProductDetail
-from services import ProductService, get_product_service
+from app.core import User, get_current_user
+from app.schemas import Product, ProductDetail
+from app.services import ProductService, get_product_service
 
 from .error_messag import PRODUCT_NOT_FOUND
 
@@ -37,14 +37,6 @@ async def get_product_details(
                             detail=PRODUCT_NOT_FOUND)
 
     return product
-
-# TODO :)
-# @product_router.post("/", status_code=200)
-# async def create_product(
-#         user: User = Depends(get_current_user),
-#         service: ProductService = Depends(get_product_service)
-# ):
-#     pass
 
 
 @product_router.delete("/{product_id}", status_code=200)

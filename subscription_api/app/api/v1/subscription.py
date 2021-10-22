@@ -3,20 +3,22 @@ from typing import Optional
 
 from fastapi import APIRouter, Depends, HTTPException, Query
 
-from app.schemas.subscription import SubscriptionDetails, SubscriptionPreview, NewSubscription
+from app.schemas.subscription import SubscriptionDetails, SubscriptionPreview, SubscriptionShort
 from app.services.subscription import (SubscriptionService,
                                        get_subscription_service)
+from app.models.subscription import Subscription
 
 from .error_messag import SUBSCRIPTION_NOT_FOUND
 
 service_router = APIRouter()
 
 
-@service_router.post("/subscription",
-                     response_model=NewSubscription,
-                     status_code=201)
-async def add_subscription():
-    ...
+@service_router.post("/subscription", status_code=200)
+async def get_subscription_details(
+        subscription: SubscriptionShort,
+        service: SubscriptionService = Depends(get_subscription_service)
+):
+    await service.set_user_subscription(**subscription.dict())
 
 
 @service_router.get("/subscription/{subscription_id}",
@@ -42,7 +44,7 @@ async def activate_subscription(
         period: Optional[int] = Query(None,
                                       description="subscription duration in days"),
         service: SubscriptionService = Depends(get_subscription_service)
-) -> SubscriptionPreview:
+) -> Subscription:
     subscription = await service.activate(subscription_id, period)
     if not subscription:
         raise HTTPException(status_code=HTTPStatus.NOT_FOUND,
@@ -57,7 +59,7 @@ async def activate_subscription(
 async def deactivate_subscription(
         subscription_id: str,
         service: SubscriptionService = Depends(get_subscription_service)
-) -> SubscriptionPreview:
+) -> Subscription:
     subscription = await service.deactivate(subscription_id)
     if not subscription:
         raise HTTPException(status_code=HTTPStatus.NOT_FOUND,

@@ -12,11 +12,11 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
 class DataBaseSettings(BaseSettings):
-    host: str = Field("127.0.0.1", env="POSTGRES_HOST")
-    port: str = Field('5432', env="POSTGRES_PORT")
+    host: str = Field("127.0.0.1", env="SUBSCRIPTIONS_DB_HOST")
+    port: str = Field('5432', env="SUBSCRIPTIONS_DB_PORT")
     name: str = Field("subscriptions", env="SUBSCRIPTIONS_DB")
-    user: str = Field("postgres", env="POSTGRES_USER")
-    password: str = Field("password", env="POSTGRES_PASSWORD")
+    user: str = Field("postgres", env="SUBSCRIPTIONS_DB_USER")
+    password: str = Field("password", env="SUBSCRIPTIONS_DB_PASSWORD")
 
     sqlalchemy_uri: Optional[PostgresDsn] = None
 

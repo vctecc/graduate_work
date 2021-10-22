@@ -18,12 +18,12 @@ sh init_multitype_db.sh
 
 Можно воспользоваться скриптом:
 ```shell
-cd ./user_subscription_api
+cd ./subscription_api
 ./prestart.sh
 ```
 Либо выполнить руками:
 ```shell
-cd ./user_subscription_api
+cd ./subscription_api
 export PYTHONPATH=$(readlink -f ./)
 alembic upgrade head
 ```

@@ -5,11 +5,15 @@ services:
     build: ./payment_api
     volumes:
       - ./payment_api:/app
+    networks:
+      - movies-api-network
 
   subscription_api:
-    build: ./user_subscription_api
+    build: subscription_api
     volumes:
-      - ./user_subscription_api:/app
+      - ./subscription_api:/app
+    networks:
+      - movies-api-network
 
   admin:
     build: ./subscription_admin

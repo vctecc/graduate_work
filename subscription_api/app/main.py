@@ -6,7 +6,7 @@ from fastapi.responses import ORJSONResponse
 
 from app.api.v1 import product_router, service_router, user_router
 from app.core.config import LOG_CONFIG, settings
-from tags import tags_metadata
+from app.tags import tags_metadata
 
 app = FastAPI(
     title=settings.project_name,
