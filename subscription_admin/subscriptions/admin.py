@@ -1,3 +1,6 @@
 from django.contrib import admin
 
-# Register your schemas here.
+from .models import Subscription, Product
+
+admin.site.register(Subscription)
+admin.site.register(Product)
