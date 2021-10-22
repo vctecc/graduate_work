@@ -10,3 +10,10 @@ class ProviderPayment(AbstractSchema):
 class ProviderPaymentResult(AbstractSchema):
     id: str
     client_secret: str
+
+
+class ProviderPaymentCancel(AbstractSchema):
+    customer: str
+    amount: int
+    payment: str
+    currency: str = "RUB"

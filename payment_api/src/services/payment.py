@@ -1,12 +1,13 @@
 from fastapi import Depends
-from sqlalchemy import select
+from sqlalchemy import select, update, desc
 from sqlalchemy.orm import Session
 
 from src.core.auth import auth
 from src.db.session import get_db
 from src.models import Payment, PaymentState, Customer
 from src.providers import AbstractProvider, ProviderPayment, get_default_provider
-from src.schemas.payment import AddPaymentSchema, NewPaymentSchema, NewPaymentResult, PaymentSchema
+from src.providers.schemas import ProviderPaymentCancel
+from src.schemas.payment import AddPaymentSchema, NewPaymentSchema, NewPaymentResult, PaymentSchema, PaymentCancel
 from src.schemas.subscriptions import SubscriptionSchema
 from src.services.subscriptions import SubscriptionService, get_subscriptions_service
 
@@ -16,6 +17,10 @@ class NotFound(BaseException):
 
 
 class CustomerNotFound(BaseException):
+    ...
+
+
+class PymentNotFound(BaseException):
     ...
 
 
@@ -62,7 +67,7 @@ class PaymentAuthenticatedService(object):
             currency=payment.currency,
             customer=customer.provider_customer_id
         )
-        invoice = await self.provider.create_payment(provider_payment)
+        invoice = await self.provider.new_payment(provider_payment)
 
         payment_db = Payment(
             customer_id=customer.id,
@@ -91,6 +96,38 @@ class PaymentService(object):
     async def get_payment(self, payment_id: int) -> Payment:
         return await self.db.get(Payment, payment_id)
 
+    async def get_payment_by_invoice_id(self, invoice_id: str) -> Payment:
+        payment = await self.db.execute(
+            select(
+                Payment.id,
+                Payment.status,
+                Payment.product_id,
+                Customer.user_id,
+            ).outerjoin(
+                Customer, Payment.customer_id == Customer.id
+            ).where(
+                Payment.invoice_id == invoice_id
+            )
+        )
+        if not payment:
+            raise PymentNotFound
+
+        return payment.first()
+
+    async def get_last_payment(self, customer_id: int) -> Payment:
+        payment = await self.db.execute(
+            select(
+                Payment.id,
+                Payment.invoice_id,
+            ).where(
+                Payment.customer_id == customer_id
+            ).order_by(desc(Payment.id))
+        )
+        if not payment:
+            raise PymentNotFound
+
+        return payment.first()
+
     async def get_customer(self, user_id: str) -> Customer:
         customer = await self.db.execute(
             select(
@@ -111,7 +148,7 @@ class PaymentService(object):
         provider_payment = ProviderPayment(
             amount=payment.amount,
             currency=payment.currency,
-            customer=customer.customer_id
+            customer=customer.provider_customer_id
         )
         invoice = await self.provider.create_payment(provider_payment)
         # TODO: что если отправим на платеж и тут упадем?
@@ -154,16 +191,49 @@ class PaymentService(object):
 
         await self.db.commit()
 
-    async def accept_payment(self, payment_id):
-        payment = await self.get_payment(payment_id)
-        payment.status = PaymentState.PAID
-        await self.db.commit()
+    async def accept_payment(self, invoice_id):
+        await self.db.execute(
+            update(
+                Payment
+            ).values(
+                status=PaymentState.PAID
+            ).where(
+                Payment.invoice_id == invoice_id
+            )
+        )
 
+        payment = await self.get_payment_by_invoice_id(invoice_id)
         subscription = SubscriptionSchema(
             user_id=payment.user_id,
             product=payment.product_id,
         )
         await self.subscriptions.add_subscription(subscription)
+        await self.db.commit()
+
+    async def error_payment(self, invoice_id):
+        await self.db.execute(
+            update(
+                Payment
+            ).values(
+                status=PaymentState.PAID
+            ).where(
+                Payment.invoice_id == invoice_id
+            )
+        )
+        await self.db.commit()
+
+    async def cancel(self, cancel_info: PaymentCancel):
+
+        customer = await self.get_customer(cancel_info.user_id)
+        payment = await self.get_last_payment(customer.id)
+
+        provider_cancel = ProviderPaymentCancel(
+            amount=cancel_info.amount,
+            currency=cancel_info.currency,
+            customer=customer.provider_customer_id,
+            payment=payment.invoice_id
+        )
+        await self.provider.cancel(provider_cancel)
 
 
 def get_payment_auth_service(
