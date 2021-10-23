@@ -5,10 +5,14 @@ from celery import Task
 from core.celery_app import app
 from core.config import settings
 from services.payment import PaymentService
-from providers.stripe import Stripe
+from providers.stripe import Stripe, StripeMock
 
 payment_service = PaymentService(settings.payments_api)
-provider = Stripe()
+
+if settings.test:
+    provider = StripeMock()
+else:
+    provider = Stripe()
 
 
 class BaseTaskWithRetry(Task): # noqa
