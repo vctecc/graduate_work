@@ -1,14 +1,16 @@
 version: '3.8'
 services:
 
-  payment_api:
+  payment_api_test:
+    container_name: payment_api
     build: ./payment_api
     volumes:
       - ./payment_api:/app
     networks:
       - movies-api-network
 
-  subscription_api:
+  subscription_api_test:
+    container_name: subscription_api
     build: subscription_api
     volumes:
       - ./subscription_api:/app
@@ -96,4 +98,6 @@ networks:
 
 volumes:
   postgresdata:
+    name: postgresdata
   redis-data:
+    name: redis-data

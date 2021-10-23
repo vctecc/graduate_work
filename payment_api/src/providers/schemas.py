@@ -3,8 +3,10 @@ from src.schemas.base import AbstractSchema
 
 class ProviderPayment(AbstractSchema):
     amount: int
-    currency: str = "RUB"
     customer: str
+    currency: str = "RUB"
+    setup_future_usage: str = 'off_session'
+    confirm = False
 
 
 class ProviderPaymentResult(AbstractSchema):

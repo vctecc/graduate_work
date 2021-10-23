@@ -1,8 +1,8 @@
-"""create tables
+"""init
 
-Revision ID: 170c69279523
+Revision ID: d586e3d391bb
 Revises: 
-Create Date: 2021-10-16 17:28:44.470597
+Create Date: 2021-10-23 18:25:13.716646
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '170c69279523'
+revision = 'd586e3d391bb'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -21,15 +21,16 @@ def upgrade():
     op.create_table('customers',
     sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
     sa.Column('user_id', sa.String(), nullable=True),
-    sa.Column('customer_id', sa.String(), nullable=True),
+    sa.Column('provider_customer_id', sa.String(), nullable=True),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_index(op.f('ix_customers_id'), 'customers', ['id'], unique=False)
     op.create_table('payments',
     sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
     sa.Column('invoice_id', sa.String(), nullable=True),
+    sa.Column('product_id', sa.String(), nullable=True),
     sa.Column('customer_id', sa.Integer(), nullable=True),
-    sa.Column('status', sa.Enum('DRAFT', 'PROCESSING', 'PAID', 'ERROR', name='paymentstate'), nullable=True),
+    sa.Column('status', sa.Enum('DRAFT', 'PRE_PROCESSING', 'PROCESSING', 'PAID', 'ERROR', 'CANCELED', name='paymentstate'), nullable=True),
     sa.ForeignKeyConstraint(['customer_id'], ['customers.id'], ),
     sa.PrimaryKeyConstraint('id')
     )

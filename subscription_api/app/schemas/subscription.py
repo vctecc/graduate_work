@@ -1,12 +1,12 @@
 import datetime
 from uuid import UUID
 
-from app.schemas.base import BaseSchema
+from app.schemas.base import BaseSchema, BaseModel
 from app.schemas.product import Product
 from app.models.subscription import SubscriptionState
 
 
-class SubscriptionShort(BaseSchema):
+class SubscriptionShort(BaseModel):
     user_id: UUID
     product_id: UUID
 

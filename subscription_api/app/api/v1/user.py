@@ -4,13 +4,21 @@ from typing import List
 
 from fastapi import APIRouter, Depends, HTTPException
 
-from app.schemas.subscription import SubscriptionPreview, SubscriptionDetails
+from app.schemas.subscription import SubscriptionPreview, SubscriptionDetails, SubscriptionShort
 from app.services.user import (UserService, get_user_service)
 from app.core import User, get_current_user
 
 from .error_messag import SUBSCRIPTION_NOT_FOUND
 
 user_router = APIRouter()
+
+
+@user_router.post("/subscription", status_code=200)
+async def get_subscription_details(
+        subscription: SubscriptionShort,
+        service: UserService = Depends(get_user_service)
+):
+    await service.set_user_subscription(subscription)
 
 
 @user_router.get("/subscription",
@@ -20,7 +28,6 @@ async def get_user_subscriptions(
         user: User = Depends(get_current_user),
         service: UserService = Depends(get_user_service)
 ) -> List[SubscriptionPreview]:
-
     subscriptions = await service.get_all_user_subscriptions(user.id)
     if not subscriptions:
         raise HTTPException(status_code=HTTPStatus.NOT_FOUND,
@@ -38,7 +45,6 @@ async def get_subscription_details(
         user: User = Depends(get_current_user),
         service: UserService = Depends(get_user_service)
 ) -> SubscriptionPreview:
-
     subscription = await service.get_user_subscription(user.id, subscription_id)
     if not subscription:
         raise HTTPException(status_code=HTTPStatus.NOT_FOUND,
@@ -55,7 +61,6 @@ async def cancel_subscription(
         user: User = Depends(get_current_user),
         service: UserService = Depends(get_user_service)
 ) -> SubscriptionPreview:
-
     subscription = await service.cancel(user.id, subscription_id)
     if not subscription:
         raise HTTPException(status_code=HTTPStatus.NOT_FOUND,
@@ -72,7 +77,6 @@ async def refund_subscription(
         user: User = Depends(get_current_user),
         service: UserService = Depends(get_user_service)
 ) -> SubscriptionPreview:
-
     subscription = await service.refund(user.id, subscription_id)
     if not subscription:
         raise HTTPException(status_code=HTTPStatus.NOT_FOUND,

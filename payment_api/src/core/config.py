@@ -13,7 +13,7 @@ class PostgresDsnWithAsync(PostgresDsn):
 
 
 class DataBaseSettings(BaseSettings):
-    host: str = Field("postgres", env="PAYMENTS_DB_HOST")
+    host: str = Field("localhost", env="PAYMENTS_DB_HOST")
     port: str = Field('5432', env="PAYMENTS_DB_PORT")
     name: str = Field("payments", env="PAYMENTS_DB")
     user: str = Field("postgres", env="PAYMENTS_DB_USER")
@@ -49,6 +49,7 @@ class SubscriptionsSettings(BaseSettings):
 class ProjectSettings(BaseSettings):
     project_name: str = "Payments API"
     debug: bool = Field(True, env="PAYMENTS_DEBUG")
+    test: bool = Field(False, env="PAYMENTS_TEST")
     stripe_secret_key = Field("", env="STRIPE_SECRET_KEY")
     jwt_secret_key = Field("", env="JWT_SECRET_KEY")
     jwt_algorithm = Field("HS256", env="JWT_ALGORITHM")

@@ -3,7 +3,7 @@ from typing import Optional
 
 from fastapi import APIRouter, Depends, HTTPException, Query
 
-from app.schemas.subscription import SubscriptionDetails, SubscriptionPreview, SubscriptionShort
+from app.schemas.subscription import SubscriptionDetails, SubscriptionPreview
 from app.services.subscription import (SubscriptionService,
                                        get_subscription_service)
 from app.models.subscription import Subscription
@@ -11,14 +11,6 @@ from app.models.subscription import Subscription
 from .error_messag import SUBSCRIPTION_NOT_FOUND
 
 service_router = APIRouter()
-
-
-@service_router.post("/subscription", status_code=200)
-async def get_subscription_details(
-        subscription: SubscriptionShort,
-        service: SubscriptionService = Depends(get_subscription_service)
-):
-    await service.set_user_subscription(**subscription.dict())
 
 
 @service_router.get("/subscription/{subscription_id}",

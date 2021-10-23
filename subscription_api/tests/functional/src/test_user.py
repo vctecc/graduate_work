@@ -58,3 +58,15 @@ async def test_user_cancel_subscription(headers, api_url, make_delete_request):
 async def test_user_refund_subscription(api_url, make_get_request):
     response = await make_get_request(f"{api_url}/product/active")
     assert response.status == 200, "Couldn't get active products."
+
+
+@pytest.mark.asyncio
+async def test_set_user_subscription(api_url, make_post_request):
+    url = f"{api_url}/user/subscription"
+
+    data = {
+        'user_id': 'a49b436a-d0b3-4e3e-84e5-ac9204a33042',
+        'product_id': 'a49b436a-d0b3-4e3e-84e5-ac9204a330a5',
+    }
+    response = await make_post_request(url, data=data)
+    assert response.status == 200, "Couldn't cancel subscription"

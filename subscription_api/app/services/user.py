@@ -8,13 +8,49 @@ from sqlalchemy.orm import Session
 
 from app.db.session import get_db
 from app.models.subscription import Subscription, SubscriptionState
+from app.models.product import Product
+from app.schemas import SubscriptionDetails
+from app.schemas.subscription import SubscriptionShort
+from . import ProductService, get_product_service
 
 from .crud import CRUDBase
+from .subscription import SubscriptionService, get_subscription_service
 
 logger = logging.getLogger(__name__)
 
 
 class UserService(CRUDBase):
+
+    def __init__(
+            self,
+            db: Session,
+            model,
+            product_service: ProductService,
+            subscription_service: SubscriptionService,
+    ):
+        super(UserService, self).__init__(db, model)
+        self.product_service = product_service
+        self.subscription_service = subscription_service
+
+    async def set_user_subscription(self, subscription: SubscriptionShort):
+
+        product: Product = await self.product_service.get(subscription.product_id)
+        user_subscription: Subscription = await self.subscription_service.get_user_subscription(
+            subscription.user_id,
+            product
+        )
+
+        if not user_subscription:
+            subscription = SubscriptionDetails(
+                user_id=subscription.user_id,
+                product_id=product.id,
+                state=SubscriptionState.ACTIVE,
+                start_date=datetime.now(),
+                end_date=datetime.now() + timedelta(days=product.period)
+            )
+            await self.subscription_service.create(subscription.dict())
+        else:
+            await self.subscription_service.activate(user_subscription.id, product.period)
 
     async def get_user_subscription(self, user_id: Any, subscription_id: Any):
         return self.db.query(self.model).filter(
@@ -38,9 +74,17 @@ class UserService(CRUDBase):
         pass
 
 
-# FIXME use async
 @lru_cache()
 def get_user_service(
-        db: Session = Depends(get_db)) -> UserService:
-    return UserService(db, Subscription)
+        db: Session = Depends(get_db),
+        product_service: ProductService = Depends(get_product_service),
+        subscription_service: SubscriptionService = Depends(get_subscription_service),
+
+) -> UserService:
+    return UserService(
+        db,
+        Subscription,
+        product_service,
+        subscription_service,
+    )
 
