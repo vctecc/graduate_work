@@ -58,11 +58,15 @@ services:
     extends:
       file: docker-compose.yaml
       service: order_scheduler
+    env_file:
+      - test.env
 
   order_worker:
     extends:
       file: docker-compose.yaml
       service: order_worker
+    env_file:
+      - test.env
 
   payment_scheduler:
     extends:

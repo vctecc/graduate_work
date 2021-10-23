@@ -1,7 +1,7 @@
 version: '3.8'
 services:
 
-  payment_api_test:
+  payment_api:
     container_name: payment_api
     build: ./payment_api
     volumes:
@@ -9,7 +9,7 @@ services:
     networks:
       - movies-api-network
 
-  subscription_api_test:
+  subscription_api:
     container_name: subscription_api
     build: subscription_api
     volumes:

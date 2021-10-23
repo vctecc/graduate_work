@@ -27,4 +27,4 @@ test_clear:
 	docker compose -f docker-compose.test.yaml rm --force
 	docker volume rm redis_data_test
 	docker volume rm postgresdata_test
-enviroment:
+

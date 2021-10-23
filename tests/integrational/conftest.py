@@ -8,8 +8,7 @@ import pytest
 from jose import jwt
 from multidict import CIMultiDictProxy
 
-from .settings import (API_SERVICE_URL, API_VERSION,
-                       ALGORITHM, SECRET_KEY, USER_ID, SUBSCRIPTION_API_URL, SUBSCRIPTION_API_VERSION, PAYMENTS_API_URL,
+from .settings import (ALGORITHM, SECRET_KEY, USER_ID, SUBSCRIPTION_API_URL, SUBSCRIPTION_API_VERSION, PAYMENTS_API_URL,
                        PAYMENTS_API_VERSION)
 
 
@@ -38,7 +37,7 @@ def subscriptions_url():
 
 @pytest.fixture(scope="session")
 def payments_url():
-    return f"{PAYMENTS_API_URL}/api/{PAYMENTS_API_VERSION}"
+    return f"{PAYMENTS_API_URL}/{PAYMENTS_API_VERSION}"
 
 
 @pytest.fixture
