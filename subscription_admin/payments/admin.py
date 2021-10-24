@@ -26,5 +26,12 @@ class MultiDBModelAdmin(admin.ModelAdmin):
         return super().formfield_for_manytomany(db_field, request, using=self.using, **kwargs)
 
 
-admin.site.register(Customer, MultiDBModelAdmin)
-admin.site.register(Payment, MultiDBModelAdmin)
+@admin.register(Customer)
+class CustomerAdmin(MultiDBModelAdmin):
+    search_fields = ['user_id', 'provider_customer_id']
+
+
+@admin.register(Payment)
+class PaymentAdmin(MultiDBModelAdmin):
+    list_filter = ('status', )
+    search_fields = ['invoice_id', 'customer__user_id', 'customer__provider_customer_id', 'product_id', 'status']
