@@ -19,7 +19,7 @@ class SubscriptionService(object):
     @classmethod
     async def update_subscription(cls, subscription: SubscriptionSchema) -> None:
         session = aiohttp.ClientSession()
-        url = f'{cls.settings.url}/user/subscription'
+        url = f'{cls.settings.url}/service/subscription'
         body = subscription.dict()
         response = await session.post(url, json=body)
         await session.close()

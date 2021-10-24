@@ -12,14 +12,6 @@ from .error_messag import SUBSCRIPTION_NOT_FOUND
 user_router = APIRouter()
 
 
-@user_router.post("/subscription", status_code=200)
-async def get_subscription_details(
-        subscription: SubscriptionShort,
-        service: UserService = Depends(get_user_service)
-):
-    await service.set_user_subscription(subscription)
-
-
 @user_router.get("/subscription",
                  response_model=List[SubscriptionPreview],
                  status_code=200)

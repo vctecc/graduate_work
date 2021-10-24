@@ -11,6 +11,10 @@ logging_config.dictConfig(LOG_CONFIG)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
+class PostgresDsnAsync(PostgresDsn):
+    allowed_schemes = {'postgres', 'postgresql', 'postgresql+asyncpg'}
+
+
 class DataBaseSettings(BaseSettings):
     host: str = Field("127.0.0.1", env="SUBSCRIPTIONS_DB_HOST")
     port: str = Field('5432', env="SUBSCRIPTIONS_DB_PORT")
@@ -18,15 +22,15 @@ class DataBaseSettings(BaseSettings):
     user: str = Field("postgres", env="SUBSCRIPTIONS_DB_USER")
     password: str = Field("password", env="SUBSCRIPTIONS_DB_PASSWORD")
 
-    sqlalchemy_uri: Optional[PostgresDsn] = None
+    sqlalchemy_uri: Optional[PostgresDsnAsync] = None
 
     @validator("sqlalchemy_uri", pre=True)
     def assemble_db_connection(cls, v: Optional[str], values: Dict[str, Any]) -> Any:
         if isinstance(v, str):
             return v
 
-        return PostgresDsn.build(
-            scheme="postgresql",
+        return PostgresDsnAsync.build(
+            scheme='postgresql+asyncpg',
             user=values.get("user"),
             password=values.get("password"),
             host=values.get("host"),

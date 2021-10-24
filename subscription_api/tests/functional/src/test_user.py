@@ -34,7 +34,6 @@ async def test_user_get_subscription_details(headers, api_url, make_get_request)
     assert response.status == 200, "Couldn't get subscription_details"
 
     # NOTE I'm not sure if this is a safe way. Maybe use a deep distinction
-    print(response.body)
     assert response.body == DETAILS
 
 
@@ -61,13 +60,13 @@ async def test_user_refund_subscription(api_url, make_get_request):
     assert response.status == 200, "Couldn't get active products."
 
 
-@pytest.mark.asyncio
-async def test_set_user_subscription(api_url, make_post_request):
-    url = f"{api_url}/user/subscription"
-
-    data = {
-        'user_id': 'a49b436a-d0b3-4e3e-84e5-ac9204a33042',
-        'product_id': 'a49b436a-d0b3-4e3e-84e5-ac9204a330a5',
-    }
-    response = await make_post_request(url, data=data)
-    assert response.status == 200, "Couldn't cancel subscription"
+# @pytest.mark.asyncio
+# async def test_set_user_subscription(api_url, make_post_request):
+#     url = f"{api_url}/user/subscription"
+#
+#     data = {
+#         'user_id': 'a49b436a-d0b3-4e3e-84e5-ac9204a33042',
+#         'product_id': 'a49b436a-d0b3-4e3e-84e5-ac9204a330a5',
+#     }
+#     response = await make_post_request(url, data=data)
+#     assert response.status == 200, "Couldn't cancel subscription"

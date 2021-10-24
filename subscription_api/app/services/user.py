@@ -4,7 +4,8 @@ from functools import lru_cache
 from typing import Any, Optional
 
 from fastapi import Depends
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, selectinload
+from sqlalchemy import select
 
 from app.db.session import get_db
 from app.models.subscription import Subscription, SubscriptionState
@@ -34,11 +35,9 @@ class UserService(CRUDBase):
 
     async def set_user_subscription(self, subscription: SubscriptionShort):
 
-        product: Product = await self.product_service.get(subscription.product_id)
-        user_subscription: Subscription = await self.subscription_service.get_user_subscription(
-            subscription.user_id,
-            product
-        )
+        product = await self.product_service.get(subscription.product_id)
+        user_subscription = await self.subscription_service.get_user_subscription(
+            subscription.user_id, subscription.id)
 
         if not user_subscription:
             subscription = SubscriptionDetails(
@@ -53,13 +52,29 @@ class UserService(CRUDBase):
             await self.subscription_service.activate(user_subscription.id, product.period)
 
     async def get_user_subscription(self, user_id: Any, subscription_id: Any):
-        return self.db.query(self.model).filter(
-            self.model.user_id == user_id,
-            self.model.id == subscription_id).first()
+        obj = await self.db.execute(
+            select(
+                self.model
+            ).options(
+                selectinload(self.model.product)
+            ).where(
+                self.model.user_id == user_id,
+                self.model.id == subscription_id
+            )
+        )
+        return obj.scalar_one_or_none()
 
     async def get_all_user_subscriptions(self, user_id: Any):
-        return self.db.query(self.model).filter(
-            self.model.user_id == user_id).all()
+        obj = await self.db.execute(
+            select(
+                self.model
+            ).options(
+                selectinload(self.model.product)
+            ).where(
+                self.model.user_id == user_id,
+            )
+        )
+        return obj.scalars().all()
 
     async def cancel(self, user_id: Any, subscription_id: Any):
         db_obj = await self.get_user_subscription(user_id, subscription_id)
@@ -67,7 +82,7 @@ class UserService(CRUDBase):
             return None
 
         db_obj.state = SubscriptionState.CANCELLED
-        self.db.commit()
+        await self.db.commit()
         return db_obj
 
     async def refund(self, user_id: Any, subscription_id: Any):

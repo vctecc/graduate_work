@@ -10,7 +10,7 @@ from uuid import UUID
 
 from fastapi import Depends
 from sqlalchemy import select
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, selectinload
 
 from app.core.exceptions import ProductNotFound
 from app.db.session import get_db
@@ -29,8 +29,25 @@ class SubscriptionService(CRUDBase):
         super().__init__(db, model)
         self.product_model = product_model
 
+    async def get(self, _id: Any):
+        stmt = select(
+            self.model
+        ).where(
+            self.model.id == _id
+        ).options(
+            selectinload(self.model.product)
+        )
+        obj = await self.db.execute(stmt)
+        return obj.scalar_one_or_none()
+
+    async def create(self, obj: dict):
+        db_obj = self.model(**obj)
+        self.db.add(db_obj)
+        await self.db.commit()
+        return await self.get(db_obj.id)
+
     async def create_subscription(self, obj: CreateSchemaType) -> Optional[Subscription]:
-        product = self.db.execute(
+        product = await self.db.execute(
             select(
                 self.product_model
             ).where(
@@ -46,27 +63,13 @@ class SubscriptionService(CRUDBase):
 
         return await self.create(obj.dict())
 
-    #  FIXME remove it
-    async def get_user_subscription(self, user_id: UUID, product: Product) -> Subscription:
-
-        user_subscription = self.db.execute(
-            select(
-                Subscription.id
-            ).where(
-                Subscription.user_id == user_id,
-                Subscription.product == product
-            )
-        )
-        user_subscription = user_subscription.first()
-        return user_subscription
-
     async def change_state(self, _id: Any, state: str) -> Optional[Subscription]:
         db_obj = await self.get(_id)
         if not db_obj:
             return None
 
         db_obj.state = state
-        self.db.commit()
+        await self.db.commit()
         return db_obj
 
     async def deactivate(self, _id: str) -> Optional[Subscription]:
