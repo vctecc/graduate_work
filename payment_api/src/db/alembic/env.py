@@ -1,13 +1,11 @@
+import asyncio
 import os
 import sys
-import asyncio
 from logging.config import fileConfig
 
-from sqlalchemy import engine_from_config
-from sqlalchemy import pool
-from sqlalchemy.ext.asyncio import AsyncEngine
-
 from alembic import context
+from sqlalchemy import engine_from_config, pool
+from sqlalchemy.ext.asyncio import AsyncEngine
 
 ABS_PATH = os.path.abspath(__file__)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(ABS_PATH))))
@@ -31,9 +29,9 @@ config.set_main_option(
 # add your model's MetaData object here
 # for 'autogenerate' support
 from src.db.session import Base
-from src.models.payments import Payment
-from src.models.payments import PaymentState
 from src.models.customer import Customer
+from src.models.payments import Payment, PaymentState
+
 target_metadata = Base.metadata
 
 

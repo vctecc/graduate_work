@@ -3,7 +3,7 @@ from typing import Optional
 from uuid import UUID
 
 from app.models.subscription import SubscriptionState
-from app.schemas.base import BaseSchema, BaseModel
+from app.schemas.base import BaseModel, BaseSchema
 from app.schemas.product import Product
 
 

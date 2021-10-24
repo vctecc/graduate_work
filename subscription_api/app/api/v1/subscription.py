@@ -4,17 +4,15 @@ from typing import List, Optional
 from fastapi import APIRouter, Depends, HTTPException, Query
 
 from app.core.exceptions import ProductNotFound
+from app.models.subscription import Subscription
 from app.schemas import (Order, SubscriptionCreate, SubscriptionDetails,
                          SubscriptionPreview)
 from app.services.order import OrderService, get_order_service
 from app.services.subscription import (SubscriptionService,
                                        get_subscription_service)
-from app.models.subscription import Subscription
-
 
 from .error_messag import (NO_CURRENT_ORDERS, PRODUCT_NOT_FOUND,
                            SUBSCRIPTION_NOT_FOUND)
-
 
 service_router = APIRouter()
 

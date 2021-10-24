@@ -1,10 +1,10 @@
 import logging
 
+import stripe
 import uvicorn
 from fastapi import FastAPI
-from fastapi.responses import ORJSONResponse
 from fastapi.middleware.cors import CORSMiddleware
-import stripe
+from fastapi.responses import ORJSONResponse
 
 from src.api.v1 import payment
 from src.core.config import settings

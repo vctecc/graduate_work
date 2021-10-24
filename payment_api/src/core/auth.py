@@ -3,10 +3,10 @@ Auth integration
 """
 
 import jwt
-from src.core.config import settings
-
 from fastapi import Depends, HTTPException, status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
+
+from src.core.config import settings
 
 oauth_schema = HTTPBearer()
 

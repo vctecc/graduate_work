@@ -1,7 +1,7 @@
 import aiohttp
 
+from src.core.config import SubscriptionsSettings, settings
 from src.schemas.subscriptions import ProductSchema, SubscriptionSchema
-from src.core.config import settings, SubscriptionsSettings
 
 
 class SubscriptionService(object):

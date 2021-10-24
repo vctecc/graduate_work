@@ -1,8 +1,8 @@
 from functools import lru_cache
 
 from fastapi import Depends
-from sqlalchemy.orm import Session
 from sqlalchemy import select, update
+from sqlalchemy.orm import Session
 
 from app.db.session import get_db
 from app.models.product import Product

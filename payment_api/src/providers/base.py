@@ -1,6 +1,7 @@
 import abc
 
-from src.providers.schemas import ProviderPayment, ProviderPaymentResult, ProviderPaymentCancel
+from src.providers.schemas import (ProviderPayment, ProviderPaymentCancel,
+                                   ProviderPaymentResult)
 from src.schemas.customer import CustomerSchema
 
 

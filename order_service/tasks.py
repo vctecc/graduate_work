@@ -1,10 +1,9 @@
 from celery import Task
 
 from core.celery_app import app
-from core.config import SUBSCRIPTION_API_URL, PAYMENTS_API_URL
-from services.subscription import SubscriptionService
+from core.config import PAYMENTS_API_URL, SUBSCRIPTION_API_URL
 from services.payment import PaymentService
-
+from services.subscription import SubscriptionService
 
 subscription_service = SubscriptionService(SUBSCRIPTION_API_URL)
 payment_service = PaymentService(PAYMENTS_API_URL)

@@ -5,9 +5,11 @@ from uuid import UUID
 from fastapi import APIRouter, Depends, HTTPException
 
 from app.core import User, get_current_user
-from app.schemas.subscription import SubscriptionPreview, SubscriptionDetails, SubscriptionShort
-from app.services.user import (UserService, get_user_service)
-from .error_messag import SUBSCRIPTION_NOT_FOUND, NO_ACCESS_FOR_PRODUCT
+from app.schemas.subscription import (SubscriptionDetails, SubscriptionPreview,
+                                      SubscriptionShort)
+from app.services.user import UserService, get_user_service
+
+from .error_messag import NO_ACCESS_FOR_PRODUCT, SUBSCRIPTION_NOT_FOUND
 
 user_router = APIRouter()
 

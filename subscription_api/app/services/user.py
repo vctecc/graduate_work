@@ -1,20 +1,20 @@
 import logging
-from uuid import UUID
 from datetime import datetime, timedelta
 from functools import lru_cache
 from typing import Any, Optional
+from uuid import UUID
 
 from fastapi import Depends
-from sqlalchemy.orm import Session, selectinload
 from sqlalchemy import select
+from sqlalchemy.orm import Session, selectinload
 
 from app.db.session import get_db
-from app.models.subscription import Subscription, SubscriptionState
 from app.models.product import Product
+from app.models.subscription import Subscription, SubscriptionState
 from app.schemas import SubscriptionDetails
 from app.schemas.subscription import SubscriptionShort
-from . import ProductService, get_product_service
 
+from . import ProductService, get_product_service
 from .crud import CRUDBase
 from .subscription import SubscriptionService, get_subscription_service
 

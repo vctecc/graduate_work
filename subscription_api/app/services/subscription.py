@@ -1,12 +1,8 @@
 import logging
 from datetime import datetime, timedelta
 from functools import lru_cache
-
 from typing import Any, ClassVar, Optional
-
-from typing import Any, Optional
 from uuid import UUID
-
 
 from fastapi import Depends
 from sqlalchemy import select
@@ -16,8 +12,8 @@ from app.core.exceptions import ProductNotFound
 from app.db.session import get_db
 from app.models.product import Product
 from app.models.subscription import Subscription, SubscriptionState
-
 from app.schemas.base import CreateSchemaType
+
 from .crud import CRUDBase
 
 logger = logging.getLogger(__name__)
