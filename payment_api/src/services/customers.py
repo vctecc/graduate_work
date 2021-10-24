@@ -2,8 +2,8 @@ from fastapi import Depends
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from src.models import Customer
 from src.db.session import get_db
+from src.models import Customer
 from src.providers import AbstractProvider, get_default_provider
 
 

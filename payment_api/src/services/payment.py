@@ -1,21 +1,23 @@
 from functools import lru_cache
 
 from fastapi import Depends
-from sqlalchemy import select, update, desc
+from sqlalchemy import desc, select, update
 from sqlalchemy.orm import Session
 
 from src.core.auth import auth, get_auth
 from src.db.session import get_db
-from src.models import Payment, PaymentState, Customer
-from src.providers import AbstractProvider, ProviderPayment, get_default_provider
+from src.models import Customer, Payment, PaymentState
+from src.providers import (AbstractProvider, ProviderPayment,
+                           get_default_provider)
 from src.providers.schemas import ProviderPaymentCancel
-from src.schemas.payment import (AddPaymentSchema, NewPaymentSchema,
-                                 NewPaymentResult, PaymentSchema, PaymentCancel,
-                                 UpdatePaymentSchema)
+from src.schemas.payment import (AddPaymentSchema, NewPaymentResult,
+                                 NewPaymentSchema, PaymentCancel,
+                                 PaymentSchema, UpdatePaymentSchema)
 from src.schemas.subscriptions import SubscriptionSchema
 from src.services.customers import CustomerService, get_customer_service
 from src.services.exceptions import PaymentNotFound
-from src.services.subscriptions import SubscriptionService, get_subscriptions_service
+from src.services.subscriptions import (SubscriptionService,
+                                        get_subscriptions_service)
 
 
 class PaymentAuthenticatedService(object):

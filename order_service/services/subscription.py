@@ -2,6 +2,7 @@ import logging
 import traceback
 from typing import Tuple
 from urllib.parse import urljoin
+
 import requests
 
 from models.subscription import Subscription

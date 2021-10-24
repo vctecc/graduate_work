@@ -1,7 +1,7 @@
+import logging.config as logging_config
 import os
 import pathlib
 from datetime import timedelta
-import logging.config as logging_config
 
 BROKER_URL = os.getenv("CELERY_BROKER_URL", "pyamqp://guest:guest@rabbit//")
 

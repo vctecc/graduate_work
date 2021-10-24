@@ -1,7 +1,7 @@
 import aiohttp
 
+from src.core.config import SubscriptionsSettings, settings
 from src.schemas.subscriptions import ProductSchema, SubscriptionSchema
-from src.core.config import settings, SubscriptionsSettings
 
 
 class SubscriptionService(object):
@@ -19,7 +19,7 @@ class SubscriptionService(object):
     @classmethod
     async def update_subscription(cls, subscription: SubscriptionSchema) -> None:
         session = aiohttp.ClientSession()
-        url = f'{cls.settings.url}/user/subscription'
+        url = f'{cls.settings.url}/service/subscription'
         body = subscription.dict()
         response = await session.post(url, json=body)
         await session.close()

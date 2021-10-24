@@ -6,7 +6,7 @@ DETAILS = {
     'user_id': 'a49b436a-d0b3-4e3e-84e5-ac9204a33042',
     'product': {
         'id': 'a49b436a-d0b3-4e3e-84e5-ac9204a330a5',
-        'price': 200,
+        'price': 20000,
         'currency_code': 'RUB',
         'period': 30,
         'is_active': True
@@ -23,7 +23,7 @@ async def test_user_get_subscriptions(headers, api_url, make_get_request):
     response = await make_get_request(url, headers=headers)
 
     assert response.status == 200, "Couldn't get user subscriptions"
-    assert len(response.body) == 3, "Incorrect number of subscriptions"
+    assert len(response.body) == 5, "Incorrect number of subscriptions"
 
 
 @pytest.mark.asyncio
@@ -61,12 +61,18 @@ async def test_user_refund_subscription(api_url, make_get_request):
 
 
 @pytest.mark.asyncio
-async def test_set_user_subscription(api_url, make_post_request):
-    url = f"{api_url}/user/subscription"
+async def test_get_access_for_product(headers, api_url, make_get_request):
+    product = "a49b436a-d0b3-4e3e-84e5-ac9204a330a5"
+    url = f"{api_url}/user/product/{product}"
 
-    data = {
-        'user_id': 'a49b436a-d0b3-4e3e-84e5-ac9204a33042',
-        'product_id': 'a49b436a-d0b3-4e3e-84e5-ac9204a330a5',
-    }
-    response = await make_post_request(url, data=data)
-    assert response.status == 200, "Couldn't cancel subscription"
+    response = await make_get_request(url, headers=headers)
+    assert response.status == 200, "User don't have access for product"
+
+
+@pytest.mark.asyncio
+async def test_not_get_access_for_product(headers, api_url, make_get_request):
+    product = "a49b436a-d0b3-4e3e-84e5-ac9204a33666"
+    url = f"{api_url}/user/product/{product}"
+
+    response = await make_get_request(url, headers=headers)
+    assert response.status == 404, "User get access for fake product"

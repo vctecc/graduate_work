@@ -3,10 +3,12 @@ from http import HTTPStatus
 from fastapi import APIRouter, Depends, HTTPException
 
 from src.providers import ProviderPaymentResult
-from src.schemas.payment import AddPaymentSchema, PaymentCancel, UpdatePaymentSchema
-from src.services.payment import (PaymentService, get_payment_auth_service,
-                                  PaymentAuthenticatedService, get_payment_service)
-from src.schemas import NewPaymentSchema, PaymentSchema, NewPaymentResult
+from src.schemas import NewPaymentResult, NewPaymentSchema, PaymentSchema
+from src.schemas.payment import (AddPaymentSchema, PaymentCancel,
+                                 UpdatePaymentSchema)
+from src.services.payment import (PaymentAuthenticatedService, PaymentService,
+                                  get_payment_auth_service,
+                                  get_payment_service)
 
 router = APIRouter()
 

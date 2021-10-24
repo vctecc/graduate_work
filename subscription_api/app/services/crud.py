@@ -1,4 +1,4 @@
-from typing import Any, ClassVar, Optional, TypeVar
+from typing import Any, ClassVar, TypeVar
 
 from sqlalchemy.orm import Session
 
@@ -14,13 +14,12 @@ class CRUDBase:
         self.model = model
 
     async def get(self, _id: Any):
-        return self.db.query(self.model).filter(self.model.id == _id).first()
+        return await self.db.get(self.model, _id)
 
     async def create(self, obj: dict):
         db_obj = self.model(**obj)
         self.db.add(db_obj)
-        self.db.commit()
-        self.db.refresh(db_obj)
+        await self.db.commit()
         return db_obj
 
     async def update(self, db_obj: ModelType, update_data: dict):
@@ -28,8 +27,8 @@ class CRUDBase:
             if hasattr(db_obj, field):
                 setattr(db_obj, field, value)
 
-        self.db.commit()
-        self.db.refresh(db_obj)
+        await self.db.commit()
+        # self.db.refresh(db_obj)
         return db_obj
 
     async def remove(self, _id: Any):
