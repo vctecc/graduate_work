@@ -1,9 +1,10 @@
 from django.contrib import admin
+from import_export.admin import ExportMixin
 
 from .models import Customer, Payment
 
 
-class MultiDBModelAdmin(admin.ModelAdmin):
+class MultiDBModelAdmin(ExportMixin, admin.ModelAdmin):
     # A handy constant for the name of the alternate database.
     using = 'payments'
 
