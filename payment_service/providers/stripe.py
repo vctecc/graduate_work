@@ -8,14 +8,9 @@ from .models import PaymentIntent
 
 
 class Stripe(BaseProvider):
-    base_api_url = ""
 
-    def send_payment_request(self, provider_user_id: str, payment_amount: float, **kwargs) -> None:
-        logging.info("Stripe got the payment request")
-        return
-
-    def acknowledge_payment_status(self, payment_id: str) -> PaymentState:
-
+    @classmethod
+    def get_payment_status(cls, payment_id: str) -> PaymentState:
         provider_payment = stripe.PaymentIntent.retrieve(
             id=payment_id,
             api_key=settings.stripe_secret_key
@@ -24,3 +19,10 @@ class Stripe(BaseProvider):
 
         logging.info(f"Stripe sent the payment {payment.id} status {payment.status}")
         return payment.status
+
+
+class StripeMock(BaseProvider):
+
+    @classmethod
+    def get_payment_status(cls, payment_id: str) -> PaymentState:
+        return PaymentState.PAID

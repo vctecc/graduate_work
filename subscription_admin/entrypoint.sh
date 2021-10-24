@@ -13,7 +13,6 @@ fi
 
 python manage.py collectstatic --no-input
 python manage.py migrate
-python manage.py migrate --database="$PAYMENTS_DB"
 python manage.py createsuperuser --no-input
 
 gunicorn --bind 0.0.0.0:8002 --reload -w 4 config.wsgi:application

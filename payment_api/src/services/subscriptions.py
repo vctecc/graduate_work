@@ -9,7 +9,6 @@ class SubscriptionService(object):
 
     @classmethod
     async def get_product(cls, product_id: str) -> ProductSchema:
-        return ProductSchema(id="pr", name="huy", price=20000)
         session = aiohttp.ClientSession()
         async with session.get(f'{cls.settings.url}/product/{product_id}') as response:
             body = await response.json()
@@ -18,14 +17,31 @@ class SubscriptionService(object):
         return product
 
     @classmethod
-    async def add_subscription(cls, subscription: SubscriptionSchema) -> None:
+    async def update_subscription(cls, subscription: SubscriptionSchema) -> None:
+        session = aiohttp.ClientSession()
+        url = f'{cls.settings.url}/user/subscription'
+        body = subscription.dict()
+        response = await session.post(url, json=body)
+        await session.close()
+
+
+class SubscriptionMock(object):
+
+    @classmethod
+    async def get_product(cls, product_id: str) -> ProductSchema:
+        return ProductSchema(
+            id='a49b436a-d0b3-4e3e-84e5-ac9204a330a5',
+            name='the podpiska',
+            price=10000
+        )
+
+    @classmethod
+    async def update_subscription(cls, subscription: SubscriptionSchema) -> None:
         ...
-        # session = aiohttp.ClientSession()
-        # url = f'{cls.settings.url}/subscription'
-        # body = subscription.dict()
-        # await session.post(url, json=body)
-        # await session.close()
 
 
 def get_subscriptions_service():
+    if settings.test:
+        return SubscriptionMock()
+
     return SubscriptionService()

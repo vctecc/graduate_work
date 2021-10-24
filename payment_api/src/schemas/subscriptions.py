@@ -9,4 +9,4 @@ class ProductSchema(AbstractSchema):
 
 class SubscriptionSchema(AbstractSchema):
     user_id: str
-    product: str
+    product_id: str

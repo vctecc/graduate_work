@@ -26,6 +26,14 @@ class NewPaymentSchema(AbstractSchema):
     currency: str = "RUB"
 
 
+class UpdatePaymentSchema(AbstractSchema):
+    invoice_id: str
+    status: PaymentState
+
+    class Config:
+        use_enum_values = True
+
+
 class NewPaymentResult(AbstractSchema):
     id: str
     client_secret: str

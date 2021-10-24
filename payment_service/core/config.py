@@ -6,16 +6,18 @@ from pydantic import BaseSettings, Field, validator
 
 
 class PaymentsSettings(BaseSettings):
-    host: str = Field("localhost:8000", env="PAYMENTS_API_URL")
+    host: str = Field("localhost", env="PAYMENTS_HOST")
+    port: str = Field("8000", env="PAYMENTS_PORT")
     version: str = Field('v1', env="PAYMENTS_API_VERSION")
     url: Optional[str] = None
 
     @validator("url", pre=True)
     def set_url(cls, v: Optional[str], values: dict) -> str:
-        return f'http://{values["host"]}/{values["version"]}'
+        return f'http://{values["host"]}:{values["port"]}/{values["version"]}'
 
 
 class Settings(BaseSettings):
+    test: bool = Field(False, env='PAYMENTS_WORKER_TEST')
     subscription_api = Field(default='localhost:8001', env='SUBSCRIPTION_API_URL')
     payments_api = PaymentsSettings()
     stripe_secret_key = Field(
