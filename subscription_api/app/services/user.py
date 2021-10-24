@@ -1,4 +1,5 @@
 import logging
+from uuid import UUID
 from datetime import datetime, timedelta
 from functools import lru_cache
 from typing import Any, Optional
@@ -33,23 +34,18 @@ class UserService(CRUDBase):
         self.product_service = product_service
         self.subscription_service = subscription_service
 
-    async def set_user_subscription(self, subscription: SubscriptionShort):
-
-        product = await self.product_service.get(subscription.product_id)
-        user_subscription = await self.subscription_service.get_user_subscription(
-            subscription.user_id, subscription.id)
-
-        if not user_subscription:
-            subscription = SubscriptionDetails(
-                user_id=subscription.user_id,
-                product_id=product.id,
-                state=SubscriptionState.ACTIVE,
-                start_date=datetime.now(),
-                end_date=datetime.now() + timedelta(days=product.period)
+    async def check_access(self, user_id: UUID, product_id: UUID) -> bool:
+        check = await self.db.execute(
+            select(self.model.id).where(
+                self.model.user_id == user_id,
+                self.model.product_id == product_id,
             )
-            await self.subscription_service.create(subscription.dict())
-        else:
-            await self.subscription_service.activate(user_subscription.id, product.period)
+        )
+
+        if check.first():
+            return True
+
+        return False
 
     async def get_user_subscription(self, user_id: Any, subscription_id: Any):
         obj = await self.db.execute(

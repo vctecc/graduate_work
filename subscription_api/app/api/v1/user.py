@@ -7,7 +7,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from app.core import User, get_current_user
 from app.schemas.subscription import SubscriptionPreview, SubscriptionDetails, SubscriptionShort
 from app.services.user import (UserService, get_user_service)
-from .error_messag import SUBSCRIPTION_NOT_FOUND
+from .error_messag import SUBSCRIPTION_NOT_FOUND, NO_ACCESS_FOR_PRODUCT
 
 user_router = APIRouter()
 
@@ -73,3 +73,16 @@ async def refund_subscription(
                             detail=SUBSCRIPTION_NOT_FOUND)
 
     return subscription
+
+
+@user_router.get("/product/{product_id}", status_code=200)
+async def check_user_accesses(
+        product_id: UUID,
+        user: User = Depends(get_current_user),
+        service: UserService = Depends(get_user_service)):
+
+    check = await service.check_access(user.id, product_id)
+    if not check:
+        raise HTTPException(status_code=HTTPStatus.NOT_FOUND,
+                            detail=NO_ACCESS_FOR_PRODUCT)
+
