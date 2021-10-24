@@ -5,6 +5,7 @@ from src.models.base import AbstractModel
 
 class PaymentState(str, enum.Enum):
     DRAFT = "draft"
+    PRE_PROCESSING = "pre_processing"
     PROCESSING = "processing"
     PAID = "paid"
     ERROR = "error"

@@ -2,21 +2,29 @@
 build_billing_dev:
 	docker compose -f docker-compose.dev.yaml up --build -d
 
-sub_pay_db_dev:
-	docker compose -f docker-compose.dev.yaml up payment_api subscription_api postgres --build -d
-
 db_dev:
-	docker compose -f docker-compose.dev.yaml up postgres --build -d
+	docker compose -f docker-compose.dev.yaml up postgres rabbit redis --build -d
 
-rabbit_dev:
-	docker compose -f docker-compose.dev.yaml up rabbit --build -d
+init_db:
+	docker exec -it payment_api bash -c 'cd src/db/; alembic upgrade head'
+	docker exec -it subscription_api bash -c 'cd src/db/; alembic upgrade head'
+	docker exec -it subscription_api bash -c 'python init_test_data.py'
 
-db_payment_scheduler_dev:
-	docker compose -f docker-compose.dev.yaml up postgres payment_scheduler payment_worker rabbit --build -d
+test:
+	make test_build
+	make init_db
+	make test_run
+	make test_clear
 
-restart_payments_worker:
-	docker compose -f docker-compose.dev.yaml restart payment_worker
+test_build:
+	docker compose -f docker-compose.test.yaml up --build -d
 
-run_celery_local:
-	celery -A payment_service.core.celery_app worker --loglevel=DEBUG -Q payments
-	celery -A payment_service.core.celery_app beat
+test_run:
+	docker exec -it payment_api bash -c 'cd tests/functional; pytest'
+	docker exec -it subscription_api bash -c 'cd tests/functional; pytest'
+
+test_clear:
+	docker compose -f docker-compose.test.yaml rm --force
+	docker volume rm redis_data_test
+	docker volume rm postgresdata_test
+

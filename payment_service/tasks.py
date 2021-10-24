@@ -5,10 +5,14 @@ from celery import Task
 from core.celery_app import app
 from core.config import settings
 from services.payment import PaymentService
-from providers.stripe import Stripe
+from providers.stripe import Stripe, StripeMock
 
 payment_service = PaymentService(settings.payments_api)
-provider = Stripe()
+
+if settings.test:
+    provider = StripeMock()
+else:
+    provider = Stripe()
 
 
 class BaseTaskWithRetry(Task): # noqa
@@ -22,6 +26,6 @@ class BaseTaskWithRetry(Task): # noqa
 def handle_pending_payments():
     """Get pending payments from DB, acknowledge their status and update payment in DB"""
     for payment in payment_service.processing_payments():
-        payment.status = provider.acknowledge_payment_status(payment.invoice_id)
+        payment.status = provider.get_payment_status(payment.invoice_id)
         payment_service.update_status(payment)
 

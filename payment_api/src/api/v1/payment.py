@@ -2,35 +2,43 @@ from http import HTTPStatus
 
 from fastapi import APIRouter, Depends, HTTPException
 
-from src.models import PaymentState
 from src.providers import ProviderPaymentResult
-from src.schemas.payment import AddPaymentSchema
-from src.services import PaymentService, get_payment_auth_service, PaymentAuthenticatedService, get_payment_service
+from src.schemas.payment import AddPaymentSchema, PaymentCancel, UpdatePaymentSchema
+from src.services.payment import (PaymentService, get_payment_auth_service,
+                                  PaymentAuthenticatedService, get_payment_service)
 from src.schemas import NewPaymentSchema, PaymentSchema, NewPaymentResult
-from src.services.payment import CustomerNotFound
 
 router = APIRouter()
 
 
-@router.post("/payments", status_code=201)
-async def new_payment(
-        payment: AddPaymentSchema,
-        payment_service: PaymentService = Depends(get_payment_service)
-):
-    try:
-        await payment_service.add_payment(payment)
-    except CustomerNotFound:
-        raise HTTPException(status_code=HTTPStatus.NOT_FOUND,
-                            detail='Customer with given user id not found.')
-
-
-@router.post("/payments/new", response_model=ProviderPaymentResult, status_code=201)
+@router.post("/payments/new",
+             response_model=ProviderPaymentResult,
+             status_code=201,
+             description='Проведение платежа с клиента.')
 async def new_payment(
         payment: NewPaymentSchema,
         payment_service: PaymentAuthenticatedService = Depends(get_payment_auth_service)
 ) -> NewPaymentResult:
     payment = await payment_service.new_payment(payment)
     return payment
+
+
+@router.post("/payments",
+             status_code=201,
+             description='Создание платежа из других сервисов.')
+async def add_payment(
+        payment: AddPaymentSchema,
+        payment_service: PaymentService = Depends(get_payment_service)
+):
+    await payment_service.add_payment(payment)
+
+
+@router.patch("/payments/cancel/")
+async def cancel_payment(
+        cancel_info: PaymentCancel,
+        payment_service: PaymentService = Depends(get_payment_service),
+) -> None:
+    await payment_service.cancel(cancel_info)  # TODO: exception
 
 
 @router.get("/payments/processing", response_model=list[PaymentSchema])
@@ -43,7 +51,8 @@ async def get_processing_payments(
 
 @router.patch("/payments/update_status", )
 async def update_payment_status(
-        payment: PaymentSchema,
+        payment: UpdatePaymentSchema,
         payment_service: PaymentService = Depends(get_payment_service),
 ) -> None:
     await payment_service.update_status(payment)  # TODO: exception
+

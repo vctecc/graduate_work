@@ -19,11 +19,16 @@ services:
     env_file:
       - dev.env
 
+  admin:
+    extends:
+      service: admin
+      file: docker-compose.yaml
+    ports:
+      - "8002:8002"
+    env_file:
+      - dev.env
+
   postgres:
-    environment:
-      - POSTGRES_MULTIPLE_DBS
-      - POSTGRES_USER
-      - POSTGRES_PASSWORD
     extends:
       file: docker-compose.yaml
       service: postgres
