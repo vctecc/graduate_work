@@ -1,4 +1,4 @@
-from typing import Any, ClassVar, Optional, TypeVar
+from typing import Any, ClassVar, TypeVar
 
 from sqlalchemy.orm import Session
 

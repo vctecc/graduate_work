@@ -1,19 +1,16 @@
 import logging
-from datetime import datetime, timedelta
 from functools import lru_cache
-from typing import Any, Optional
+from typing import Any
 from uuid import UUID
 
+from aioredis import Redis
 from fastapi import Depends
 from sqlalchemy import select
 from sqlalchemy.orm import Session, selectinload
 
 from app.db.session import get_db
-from app.models.product import Product
+from app.db.cache import get_cache
 from app.models.subscription import Subscription, SubscriptionState
-from app.schemas import SubscriptionDetails
-from app.schemas.subscription import SubscriptionShort
-
 from . import ProductService, get_product_service
 from .crud import CRUDBase
 from .subscription import SubscriptionService, get_subscription_service
@@ -26,15 +23,24 @@ class UserService(CRUDBase):
     def __init__(
             self,
             db: Session,
+            cache: Redis,
             model,
             product_service: ProductService,
             subscription_service: SubscriptionService,
     ):
         super(UserService, self).__init__(db, model)
+        self.cache = cache
         self.product_service = product_service
         self.subscription_service = subscription_service
 
     async def check_access(self, user_id: UUID, product_id: UUID) -> bool:
+        key = f'{user_id}.{product_id}'
+
+        check = await self.cache.get(key)
+        if check:
+            logger.debug('get user access from cache')
+            return True
+
         check = await self.db.execute(
             select(self.model.id).where(
                 self.model.user_id == user_id,
@@ -42,10 +48,12 @@ class UserService(CRUDBase):
             )
         )
 
-        if check.first():
-            return True
+        if not check.first():
+            return False
 
-        return False
+        await self.cache.set(key, 1)
+        logger.debug('set user access to cache')
+        return True
 
     async def get_user_subscription(self, user_id: Any, subscription_id: Any):
         obj = await self.db.execute(
@@ -88,12 +96,13 @@ class UserService(CRUDBase):
 @lru_cache()
 def get_user_service(
         db: Session = Depends(get_db),
+        cache: Redis = Depends(get_cache),
         product_service: ProductService = Depends(get_product_service),
         subscription_service: SubscriptionService = Depends(get_subscription_service),
-
 ) -> UserService:
     return UserService(
         db,
+        cache,
         Subscription,
         product_service,
         subscription_service,

@@ -43,12 +43,12 @@ class CacheSettings(BaseSettings):
     host: str = Field("127.0.0.1", env="CACHE_HOST")
     port: int = Field(6379, env="CACHE_PORT")
     expire: int = Field(420, env="CACHE_EXPIRE")
-    # backoff_time: int = Field(10, "CACHE_BACKOFF_TIME")
 
 
 class BackoffSettings(BaseSettings):
     base: float = Field(2, env="BACKOFF_BASE")
     factor: float = Field(1, env="BACKOFF_FACTOR")
+    max_time: int = Field(10, env="BACKOFF_MAX_TIME")
     max_value: int = Field(5, env="BACKOFF_MAX_VALUE")
 
 

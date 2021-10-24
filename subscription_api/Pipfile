@@ -16,6 +16,7 @@ aiohttp = "*"
 orjson = "*"
 pytest = "*"
 pytest-asyncio = "*"
+aioredis = "<2.0"
 
 [dev-packages]
 

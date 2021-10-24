@@ -17,18 +17,6 @@ app = FastAPI(
 )
 
 
-@app.on_event("startup")
-async def startup():
-    pass
-    # redis_cache.redis = await aioredis.create_redis_pool()
-
-
-@app.on_event("shutdown")
-async def shutdown():
-    pass
-    # await redis_cache.redis.close()
-
-
 app.include_router(user_router, prefix="/api/v1/user", tags=["user"])
 app.include_router(product_router, prefix="/api/v1/product", tags=["product"])
 app.include_router(service_router, prefix="/api/v1/service", tags=["service"])

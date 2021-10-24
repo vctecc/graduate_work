@@ -7,7 +7,6 @@ from sqlalchemy.orm import Session, selectinload
 
 from app.db.session import get_db
 from app.models.subscription import Subscription, SubscriptionState
-
 from .crud import CRUDBase
 
 
