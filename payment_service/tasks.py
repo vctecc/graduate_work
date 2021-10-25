@@ -1,11 +1,9 @@
-import logging
-from abc import ABC
 from celery import Task
 
 from core.celery_app import app
 from core.config import settings
-from services.payment import PaymentService
 from providers.stripe import Stripe, StripeMock
+from services.payment import PaymentService
 
 payment_service = PaymentService(settings.payments_api)
 
@@ -28,4 +26,3 @@ def handle_pending_payments():
     for payment in payment_service.processing_payments():
         payment.status = provider.get_payment_status(payment.invoice_id)
         payment_service.update_status(payment)
-

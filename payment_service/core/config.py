@@ -12,7 +12,7 @@ class PaymentsSettings(BaseSettings):
     url: Optional[str] = None
 
     @validator("url", pre=True)
-    def set_url(cls, v: Optional[str], values: dict) -> str:
+    def set_url(cls, v: Optional[str], values: dict) -> str:  # noqa
         return f'http://{values["host"]}:{values["port"]}/{values["version"]}'
 
 

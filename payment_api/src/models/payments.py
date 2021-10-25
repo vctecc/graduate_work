@@ -21,4 +21,3 @@ class Payment(AbstractModel):
     product_id = Column(String)
     customer_id = Column(ForeignKey("customers.id"))
     status = Column(Enum(PaymentState))
-

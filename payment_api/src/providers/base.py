@@ -18,6 +18,3 @@ class AbstractProvider(abc.ABC):
     @abc.abstractmethod
     async def cancel(self, cancel: ProviderPaymentCancel):
         pass
-
-
-

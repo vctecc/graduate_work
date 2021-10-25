@@ -19,6 +19,3 @@ class SubscriptionService:
         subscriptions = tuple(Subscription(**item) for item in data)
         logging.info(f"Got subscriptions: {subscriptions}")
         return subscriptions
-
-
-

@@ -1,12 +1,10 @@
 from http import HTTPStatus
-from typing import List, Optional
+from typing import List
 
 from fastapi import APIRouter, Depends, HTTPException, Query
 
-from app.core import User, get_current_user
 from app.schemas import Product, ProductDetail
 from app.services import ProductService, get_product_service
-
 from .error_messag import PRODUCT_NOT_FOUND
 
 product_router = APIRouter()
@@ -42,10 +40,9 @@ async def get_product_details(
 @product_router.delete("/{product_id}", status_code=200)
 async def set_product_inactive(
         product_id: str = Query(None),
-        user: User = Depends(get_current_user),
         service: ProductService = Depends(get_product_service)
 ):
-    product = await service.get_by_id(product_id)
+    product = await service.get(product_id)
     if not product:
         raise HTTPException(status_code=HTTPStatus.NOT_FOUND,
                             detail=PRODUCT_NOT_FOUND)

@@ -35,6 +35,7 @@ def event_loop():
 def subscriptions_url():
     return f"{SUBSCRIPTION_API_URL}/api/{SUBSCRIPTION_API_VERSION}"
 
+
 @pytest.fixture(scope="session")
 def payments_url():
     return f"{PAYMENTS_API_URL}/{PAYMENTS_API_VERSION}"

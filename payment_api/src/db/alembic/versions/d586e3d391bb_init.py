@@ -29,7 +29,9 @@ def upgrade():
     sa.Column('invoice_id', sa.String(), nullable=True),
     sa.Column('product_id', sa.String(), nullable=True),
     sa.Column('customer_id', sa.Integer(), nullable=True),
-    sa.Column('status', sa.Enum('DRAFT', 'PRE_PROCESSING', 'PROCESSING', 'PAID', 'ERROR', 'CANCELED', name='paymentstate'), nullable=True),
+    sa.Column('status',
+              sa.Enum('DRAFT', 'PRE_PROCESSING', 'PROCESSING', 'PAID', 'ERROR', 'CANCELED', name='paymentstate'),
+              nullable=True),
     sa.ForeignKeyConstraint(['customer_id'], ['customers.id'], ),
     sa.PrimaryKeyConstraint('id')
     )

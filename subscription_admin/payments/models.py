@@ -12,6 +12,7 @@ class Customer(models.Model):
     def __str__(self):
         return f"User ID: {self.user_id},  ID from provider: {self.provider_customer_id}"
 
+
 STATUS = (
     ('DRAFT', 'draft'),
     ('PROCESSING', 'processing'),
@@ -32,4 +33,5 @@ class Payment(models.Model):
         db_table = 'payments'
 
     def __str__(self):
-        return f"[{self.status}] Invoice: {self.invoice_id} Customer: {self.customer.user_id} Product: {self.product_id}"
+        tmpl = "[{}] Invoice: {} Customer: {} Product: {}"
+        return tmpl.format(self.status, self.invoice_id, self.customer.user_id, self.product_id)
