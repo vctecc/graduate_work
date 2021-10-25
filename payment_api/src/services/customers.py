@@ -4,7 +4,8 @@ from sqlalchemy.orm import Session
 
 from src.db.session import get_db
 from src.models import Customer
-from src.providers import AbstractProvider, get_default_provider
+from src.providers.base import AbstractProvider
+from src.providers.default import get_default_provider
 
 
 class CustomerService(object):

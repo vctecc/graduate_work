@@ -2,8 +2,8 @@ from typing import Optional
 
 import stripe
 
-from src.providers import (AbstractProvider, ProviderPayment,
-                           ProviderPaymentResult)
+from src.providers.base import AbstractProvider
+from src.providers.schemas import ProviderPayment, ProviderPaymentResult
 from src.providers.schemas import ProviderPaymentCancel
 from src.schemas.customer import CustomerSchema
 

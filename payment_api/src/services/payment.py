@@ -7,8 +7,9 @@ from sqlalchemy.orm import Session
 from src.core.auth import auth, get_auth
 from src.db.session import get_db
 from src.models import Customer, Payment, PaymentState
-from src.providers import (AbstractProvider, ProviderPayment,
-                           get_default_provider)
+from src.providers.base import AbstractProvider
+from src.providers.schemas import ProviderPayment
+from src.providers.default import get_default_provider
 from src.providers.schemas import ProviderPaymentCancel
 from src.schemas.payment import (AddPaymentSchema, NewPaymentResult,
                                  NewPaymentSchema, PaymentCancel,
