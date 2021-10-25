@@ -46,6 +46,7 @@ services:
       service: redis
     volumes:
       - redis_data_test:/opt/app/redis/data
+
   rabbit:
     extends:
       file: docker-compose.yaml

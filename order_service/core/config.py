@@ -12,7 +12,7 @@ class SubscriptionSettings(BaseSettings):
     url: Optional[str] = None
 
     @validator("url", pre=True)
-    def set_url(cls, v: Optional[str], values: dict) -> str:
+    def set_url(cls, v: Optional[str], values: dict) -> str:  # noqa
         return f'http://{values["host"]}:{values["port"]}/{values["version"]}'
 
 
@@ -23,7 +23,7 @@ class PaymentsSettings(BaseSettings):
     url: Optional[str] = None
 
     @validator("url", pre=True)
-    def set_url(cls, v: Optional[str], values: dict) -> str:
+    def set_url(cls, v: Optional[str], values: dict) -> str:  # noqa
         return f'http://{values["host"]}:{values["port"]}/{values["version"]}'
 
 
@@ -39,5 +39,3 @@ settings = Settings()
 LOGGER_CONFIG = pathlib.Path(__file__).parent / 'logging.conf'
 LOGGER_NAME = 'order_service'
 logging_config.fileConfig(LOGGER_CONFIG)
-
-

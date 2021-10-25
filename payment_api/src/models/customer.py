@@ -8,4 +8,3 @@ class Customer(AbstractModel):
 
     user_id = Column(String)
     provider_customer_id = Column(String)
-

@@ -1,5 +1,5 @@
 from logging import config as logging_config
-from typing import Any, Dict, Optional, Union
+from typing import Any, Dict, Optional
 
 from pydantic import BaseSettings, Field, PostgresDsn, validator
 
@@ -22,7 +22,7 @@ class DataBaseSettings(BaseSettings):
     sqlalchemy_uri: Optional[str] = None
 
     @validator("sqlalchemy_uri", pre=True)
-    def assemble_db_connection(cls, v: Optional[str], values: Dict[str, Any]) -> str:
+    def assemble_db_connection(cls, v: Optional[str], values: Dict[str, Any]) -> str:  # noqa
         if isinstance(v, str):
             return v
 
@@ -42,7 +42,7 @@ class SubscriptionsSettings(BaseSettings):
     url: Optional[str] = None
 
     @validator("url", pre=True)
-    def set_url(cls, v: Optional[str], values: Dict[str, Any]) -> str:
+    def set_url(cls, v: Optional[str], values: Dict[str, Any]) -> str:  # noqa
         return f'http://{values["host"]}:{values["port"]}/api/v1'
 
 

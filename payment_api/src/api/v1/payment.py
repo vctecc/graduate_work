@@ -1,6 +1,4 @@
-from http import HTTPStatus
-
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends
 
 from src.providers.schemas import ProviderPaymentResult
 from src.schemas import NewPaymentResult, NewPaymentSchema, PaymentSchema
@@ -57,4 +55,3 @@ async def update_payment_status(
         payment_service: PaymentService = Depends(get_payment_service),
 ) -> None:
     await payment_service.update_status(payment)  # TODO: exception
-

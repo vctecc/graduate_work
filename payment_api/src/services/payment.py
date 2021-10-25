@@ -4,7 +4,7 @@ from fastapi import Depends
 from sqlalchemy import desc, select, update
 from sqlalchemy.orm import Session
 
-from src.core.auth import auth, get_auth
+from src.core.auth import get_auth
 from src.db.session import get_db
 from src.models import Customer, Payment, PaymentState
 from src.providers.base import AbstractProvider

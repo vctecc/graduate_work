@@ -7,7 +7,7 @@ tags_metadata = [
         "name": "product",
         "description": "Управление продуктами для подписки."
     },
-{
+    {
         "name": "service",
         "description": "Информация о статусе подписок пользователей."
     },
