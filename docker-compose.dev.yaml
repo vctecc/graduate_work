@@ -23,6 +23,8 @@ services:
     extends:
       service: admin
       file: docker-compose.yaml
+    environment:
+      - DJANGO_SETTINGS_MODULE=config.settings.dev
     ports:
       - "8002:8002"
     env_file:
@@ -48,17 +50,20 @@ services:
       service: rabbit
     ports:
       - "5672:5672"
-      - "15672:15672"
 
   order_scheduler:
     extends:
       file: docker-compose.yaml
       service: order_scheduler
+    env_file:
+      - dev.env
 
   order_worker:
     extends:
       file: docker-compose.yaml
       service: order_worker
+    env_file:
+      - dev.env
 
   payment_scheduler:
     extends:
