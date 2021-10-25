@@ -35,14 +35,3 @@ async def get_product_details(
                             detail=PRODUCT_NOT_FOUND)
 
     return product
-
-
-@product_router.delete("/{product_id}", status_code=200)
-async def set_product_inactive(
-        product_id: str = Query(None),
-        service: ProductService = Depends(get_product_service)
-):
-    product = await service.get(product_id)
-    if not product:
-        raise HTTPException(status_code=HTTPStatus.NOT_FOUND,
-                            detail=PRODUCT_NOT_FOUND)

@@ -4,10 +4,10 @@ from uuid import UUID
 
 from fastapi import APIRouter, Depends, HTTPException
 
-from app.core import User, get_current_user
+from app.core import User, get_current_user, exceptions
 from app.schemas.subscription import (SubscriptionDetails, SubscriptionPreview)
 from app.services.user import UserService, get_user_service
-from .error_messag import NO_ACCESS_FOR_PRODUCT, SUBSCRIPTION_NOT_FOUND
+from .error_messag import NO_ACCESS_FOR_PRODUCT, SUBSCRIPTION_NOT_FOUND, TRY_LATER
 
 user_router = APIRouter()
 
@@ -59,20 +59,21 @@ async def cancel_subscription(
     return subscription
 
 
-@user_router.post("/subscription/{subscription_id}",
-                  response_model=SubscriptionPreview,
+@user_router.post("/refund/{subscription_id}",
                   status_code=200)
 async def refund_subscription(
         subscription_id: UUID,
         user: User = Depends(get_current_user),
         service: UserService = Depends(get_user_service)
-) -> SubscriptionPreview:
-    subscription = await service.refund(user.id, subscription_id)
-    if not subscription:
+):
+    try:
+        await service.refund(user.id, subscription_id)
+    except exceptions.SubscriptionNotFound:
         raise HTTPException(status_code=HTTPStatus.NOT_FOUND,
                             detail=SUBSCRIPTION_NOT_FOUND)
-
-    return subscription
+    except exceptions.PaymentAPIUnavailable:
+        raise HTTPException(status_code=HTTPStatus.ACCEPTED,
+                            detail=TRY_LATER)
 
 
 @user_router.get("/product/{product_id}", status_code=200)

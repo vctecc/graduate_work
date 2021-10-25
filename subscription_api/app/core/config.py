@@ -57,6 +57,17 @@ class AuthSettings(BaseSettings):
     secret_key: Optional[str] = "super-secret"  # FIXME get key from auth service
 
 
+class PaymentsAPISettings(BaseSettings):
+    host: str = Field("localhost", env="PAYMENTS_HOST")
+    port: str = Field('8000', env="PAYMENTS_PORT")
+    suffix: str = Field("api/v1/payments/cancel/")
+    url: Optional[str] = None
+
+    @validator("url", pre=True)
+    def set_url(cls, v: Optional[str], values: Dict[str, Any]) -> str:  # noqa
+        return f'http://{values["host"]}:{values["port"]}/{values["suffix"]}'
+
+
 class ProjectSettings(BaseSettings):
     project_name: str = "Subscription API"
     debug: bool = True
