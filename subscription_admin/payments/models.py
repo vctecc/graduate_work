@@ -32,6 +32,6 @@ class Payment(models.Model):
         managed = False
         db_table = 'payments'
 
-    def __str__(self):
-        tmpl = "[{}] Invoice: {} Customer: {} Product: {}"
+    def __str__(self): # noqa
+        tmpl = '[{}] Invoice: {} Customer: {} Product: {}'
         return tmpl.format(self.status, self.invoice_id, self.customer.user_id, self.product_id)
