@@ -1,10 +1,13 @@
 import enum
-from sqlalchemy import Column, String, Enum, ForeignKey
+
+from sqlalchemy import Column, Enum, ForeignKey, String
+
 from src.models.base import AbstractModel
 
 
 class PaymentState(str, enum.Enum):
     DRAFT = "draft"
+    PRE_PROCESSING = "pre_processing"
     PROCESSING = "processing"
     PAID = "paid"
     ERROR = "error"
@@ -18,4 +21,3 @@ class Payment(AbstractModel):
     product_id = Column(String)
     customer_id = Column(ForeignKey("customers.id"))
     status = Column(Enum(PaymentState))
-

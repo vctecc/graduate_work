@@ -1,0 +1,24 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+alembic = "1.7.4"
+python-jose = "3.3.0"
+sqlalchemy = {extras = ["asyncio"], version = "*"}
+pydantic = "1.8.2"
+asyncpg = "==0.24.0"
+uvicorn = " 0.15.0"
+fastapi = "0.70.0"
+backoff = "1.11.1"
+aiohttp = "*"
+orjson = "*"
+pytest = "*"
+pytest-asyncio = "*"
+aioredis = "<2.0"
+
+[dev-packages]
+
+[requires]
+python_version = "3.9"

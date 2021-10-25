@@ -1,4 +1,4 @@
-# Биллинг
+# Биллинг и всякое
 
 ## Запуск инфраструктуры для разработки
 ```shell
@@ -7,10 +7,17 @@ make build_billing_dev
 
 ## Инициаилазция баз
 ```shell
-docker exec -it postgres sh
-cd docker-entrypoint-initdb.d/
-sh init_multitype_db.sh
+make init_db
 ```
+Выполнятся все миграции и создание данных
+
+## Запуск тестов
+```shell
+make test
+```
+
+Создается другой контейнер постгри, инициализируются базы и миграции, после запуска тестов
+удаляются все контейнеры
 
 ## Локальный запуск user subscription api
 После поднятия инфраструктуры, нужно задать путь к приложению
@@ -18,12 +25,12 @@ sh init_multitype_db.sh
 
 Можно воспользоваться скриптом:
 ```shell
-cd ./user_subscription_api
+cd ./subscription_api
 ./prestart.sh
 ```
 Либо выполнить руками:
 ```shell
-cd ./user_subscription_api
+cd ./subscription_api
 export PYTHONPATH=$(readlink -f ./)
 alembic upgrade head
 ```

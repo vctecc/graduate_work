@@ -20,6 +20,7 @@ class Product(BaseModel):
     currency_code = models.CharField(max_length=3, default='RUB')
     is_active = models.BooleanField(default=True, verbose_name="is active")
 
+
     class Meta:
         managed = False
         db_table = 'product'

@@ -29,10 +29,6 @@ services:
       - dev.env
 
   postgres:
-    environment:
-      - POSTGRES_MULTIPLE_DBS
-      - POSTGRES_USER
-      - POSTGRES_PASSWORD
     extends:
       file: docker-compose.yaml
       service: postgres
@@ -52,17 +48,20 @@ services:
       service: rabbit
     ports:
       - "5672:5672"
-      - "15672:15672"
 
   order_scheduler:
     extends:
       file: docker-compose.yaml
       service: order_scheduler
+    env_file:
+      - dev.env
 
   order_worker:
     extends:
       file: docker-compose.yaml
       service: order_worker
+    env_file:
+      - dev.env
 
   payment_scheduler:
     extends:

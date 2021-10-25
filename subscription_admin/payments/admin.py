@@ -36,3 +36,4 @@ class CustomerAdmin(MultiDBModelAdmin):
 class PaymentAdmin(MultiDBModelAdmin):
     list_filter = ('status', )
     search_fields = ['invoice_id', 'customer__user_id', 'customer__provider_customer_id', 'product_id', 'status']
+

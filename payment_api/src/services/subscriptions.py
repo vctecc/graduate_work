@@ -1,7 +1,7 @@
 import aiohttp
 
+from src.core.config import SubscriptionsSettings, settings
 from src.schemas.subscriptions import ProductSchema, SubscriptionSchema
-from src.core.config import settings, SubscriptionsSettings
 
 
 class SubscriptionService(object):
@@ -17,13 +17,31 @@ class SubscriptionService(object):
         return product
 
     @classmethod
-    async def add_subscription(cls, subscription: SubscriptionSchema) -> None:
+    async def update_subscription(cls, subscription: SubscriptionSchema) -> None:
         session = aiohttp.ClientSession()
-        url = f'{cls.settings.url}/subscription'
+        url = f'{cls.settings.url}/service/subscription'
         body = subscription.dict()
-        await session.post(url, json=body)
+        response = await session.post(url, json=body)
         await session.close()
 
 
+class SubscriptionMock(object):
+
+    @classmethod
+    async def get_product(cls, product_id: str) -> ProductSchema:
+        return ProductSchema(
+            id='a49b436a-d0b3-4e3e-84e5-ac9204a330a5',
+            name='the podpiska',
+            price=10000
+        )
+
+    @classmethod
+    async def update_subscription(cls, subscription: SubscriptionSchema) -> None:
+        ...
+
+
 def get_subscriptions_service():
+    if settings.test:
+        return SubscriptionMock()
+
     return SubscriptionService()

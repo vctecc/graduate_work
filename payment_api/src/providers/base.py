@@ -1,7 +1,8 @@
 import abc
 
-from src.providers.schemas import ProviderPayment, ProviderPaymentResult
-from src.schemas import CustomerSchema
+from src.providers.schemas import (ProviderPayment, ProviderPaymentCancel,
+                                   ProviderPaymentResult)
+from src.schemas.customer import CustomerSchema
 
 
 class AbstractProvider(abc.ABC):
@@ -14,4 +15,6 @@ class AbstractProvider(abc.ABC):
     async def create_payment(self, payment: ProviderPayment) -> ProviderPaymentResult:
         pass
 
-
+    @abc.abstractmethod
+    async def cancel(self, cancel: ProviderPaymentCancel):
+        pass
