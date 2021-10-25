@@ -25,6 +25,14 @@ services:
       - movies-api-network
     restart: on-failure
 
+  admin:
+    build: ./subscription_admin
+    ports:
+      - "8002:8002"
+    networks:
+      - movies-api-network
+    restart: on-failure
+
   redis:
     image: redis:6.0.9
     ports:
