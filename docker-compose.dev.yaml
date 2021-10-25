@@ -23,8 +23,6 @@ services:
     extends:
       service: admin
       file: docker-compose.yaml
-    environment:
-      - DJANGO_SETTINGS_MODULE=config.settings.dev
     ports:
       - "8002:8002"
     env_file:
