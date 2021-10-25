@@ -35,3 +35,4 @@ class Payment(models.Model):
     def __str__(self):
         tmpl = "[{}] Invoice: {} Customer: {} Product: {}"
         return tmpl.format(self.status, self.invoice_id, self.customer.user_id, self.product_id)
+
