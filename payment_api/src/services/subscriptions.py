@@ -21,6 +21,8 @@ class SubscriptionService(object):
         session = aiohttp.ClientSession()
         url = f'{cls.settings.url}/service/subscription'
         body = subscription.dict()
+
+        # TODO: need backoff or queue
         response = await session.post(url, json=body) # noqa
         await session.close()
 
