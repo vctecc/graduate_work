@@ -76,3 +76,21 @@ async def test_not_get_access_for_product(headers, api_url, make_get_request):
 
     response = await make_get_request(url, headers=headers)
     assert response.status == 404, "User get access for fake product"
+
+
+@pytest.mark.asyncio
+async def test_get_refund(headers, api_url, make_post_request):
+    subscription = '429b436a-d042-4e3e-84e5-789204a33042'
+    url = f"{api_url}/user/refund/{subscription}"
+
+    response = await make_post_request(url, headers=headers)
+    assert response.status == 200, "User couldn't refund subscription"
+
+
+@pytest.mark.asyncio
+async def test_get_refund_wrong(headers, api_url, make_post_request):
+    subscription = '429b436a-6666-6666-84e5-789204a33042'
+    url = f"{api_url}/user/refund/{subscription}"
+
+    response = await make_post_request(url, headers=headers)
+    assert response.status == 404, "User could refund fake subscription"

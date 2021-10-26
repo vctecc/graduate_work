@@ -10,3 +10,9 @@ class Order(FastModel):
     user_id: UUID
     subscription_id: UUID = Field(alias='id')
     product: Product
+
+
+class OrderRefund(FastModel):
+    user_id: UUID
+    amount: int
+    currency: str = "RUB"

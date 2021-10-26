@@ -1,0 +1,18 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+wemake-python-styleguide  = "*"
+flake8-html = "*"
+mypy  = "*"
+lxml = "*"
+types-aiofiles  = "*"
+types-certifi  = "*"
+types-ujson = "*"
+pytest  = "*"
+pytest-html  = "*"
+
+[requires]
+python_version = "3.9"

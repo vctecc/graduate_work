@@ -18,8 +18,7 @@ class Product(BaseModel):
     period = models.IntegerField()
     price = models.IntegerField()
     currency_code = models.CharField(max_length=3, default='RUB')
-    is_active = models.BooleanField(default=True, verbose_name="is active")
-
+    is_active = models.BooleanField(default=True, verbose_name='is active')
 
     class Meta:
         managed = False
