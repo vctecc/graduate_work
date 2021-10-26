@@ -10,11 +10,14 @@ init_db:
 	docker exec -it subscription_api bash -c 'cd src/db/; alembic upgrade head'
 	docker exec -it subscription_api bash -c 'python init_test_data.py'
 
-test:
+test: $(CLEAR)
 	make test_build
 	make init_db
 	make test_run
-	make test_clear
+
+	if $(CLEAR)
+		make test_clear
+	endif
 
 test_build:
 	docker compose -f docker-compose.test.yaml up --build -d
