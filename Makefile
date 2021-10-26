@@ -23,10 +23,13 @@ test_build:
 	docker compose -f docker-compose.test.yaml up --build -d
 
 test_run:
-	docker exec -it payment_api bash -c 'cd tests/functional; pytest'
-	docker exec -it subscription_api bash -c 'cd tests/functional; pytest'
+	docker exec -it payment_api bash -c 'cd tests/functional/; pytest'
+	docker exec -it payment_api bash -c 'cd tests/integration/; pytest'
+	docker exec -it subscription_api bash -c 'cd tests/functional/; pytest'
+	docker exec -it subscription_api bash -c 'cd tests/integration/; pytest'
 
 test_clear:
+	docker compose -f docker-compose.test.yaml stop
 	docker compose -f docker-compose.test.yaml rm --force
 	docker volume rm redis_data_test
 	docker volume rm postgresdata_test
