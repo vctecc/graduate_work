@@ -1,10 +1,10 @@
 from typing import Optional
 
 import stripe
-
 from src.providers.base import AbstractProvider
-from src.providers.schemas import (ProviderPayment, ProviderPaymentResult,
-                                   ProviderPaymentCancel,)
+from src.providers.schemas import (
+    ProviderPayment, ProviderPaymentResult, ProviderPaymentCancel,
+)
 from src.schemas.customer import CustomerSchema
 
 
@@ -36,7 +36,7 @@ class StripeProvider(AbstractProvider):
     async def customer_payment_method(cls, customer: str) -> Optional[str]:
         methods = stripe.PaymentMethod.list(
             customer=customer,
-            type='card'
+            type='card',
         )
 
         if not methods:
@@ -51,10 +51,10 @@ class StripeProviderMock(AbstractProvider):
         return CustomerSchema(id='cus_KSkOhnNYigh8Mc')
 
     async def create_payment(self, payment: ProviderPayment) -> ProviderPaymentResult:
-        return ProviderPaymentResult(
+        return ProviderPaymentResult(  # noqa: S106
             id='pi_3JnrIvEZwW9AoJC20hPPg3ua',
             client_secret='big_secret',
         )
 
     async def cancel(self, cancel: ProviderPaymentCancel):
-        ...
+        ...  # noqa: WPS428

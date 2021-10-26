@@ -45,7 +45,14 @@ async def cancel_payment(
         cancel_info: PaymentCancel,
         payment_service: PaymentService = Depends(get_payment_service),
 ) -> None:
-    await payment_service.cancel(cancel_info)  # TODO: exception
+    try:
+        await payment_service.cancel(cancel_info)
+    except PaymentNotFound:
+        raise HTTPException(
+            status_code=HTTPStatus.NOT_FOUND,
+            detail='Payment not found.'
+        )
+
 
 
 @router.get("/payments/processing", response_model=list[PaymentSchema])
@@ -54,10 +61,15 @@ async def get_processing_payments(
 ) -> list[PaymentSchema]:
     return await payment_service.get_processing()
 
-
 @router.patch("/payments/update_status")
 async def update_payment_status(
         payment: UpdatePaymentSchema,
         payment_service: PaymentService = Depends(get_payment_service),
 ) -> None:
-    await payment_service.update_status(payment)  # TODO: exception
+    try:
+        await payment_service.update_status(payment)
+    except PaymentNotFound:
+        raise HTTPException(
+            status_code=HTTPStatus.NOT_FOUND,
+            detail='Payment not found.'
+        )
