@@ -18,4 +18,3 @@ class SubscriptionAdmin(ExportAdmin):
 class ProductAdmin(ExportAdmin):
     list_filter = ('name', 'is_active')
     search_fields = ['name', 'is_active', 'price', 'period']
-

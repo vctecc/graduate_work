@@ -94,8 +94,4 @@ async def get_orders(
 ) -> List[Order]:
 
     orders = await service.get_subscriptions_for_payment(limit)
-    if not orders:
-        raise HTTPException(status_code=HTTPStatus.NOT_FOUND,
-                            detail=NO_CURRENT_ORDERS)
-
     return orders

@@ -10,8 +10,10 @@ from sqlalchemy.orm import Session, selectinload
 
 from app.db.session import get_db
 from app.db.cache import get_cache
+from app.core.exceptions import SubscriptionNotFound
 from app.models.subscription import Subscription, SubscriptionState
 from . import ProductService, get_product_service
+from .refund import RefundService, get_refund_service
 from .crud import CRUDBase
 from .subscription import SubscriptionService, get_subscription_service
 
@@ -27,11 +29,13 @@ class UserService(CRUDBase):
             model,
             product_service: ProductService,
             subscription_service: SubscriptionService,
+            refund_service: RefundService
     ):
         super(UserService, self).__init__(db, model)
         self.cache = cache
         self.product_service = product_service
         self.subscription_service = subscription_service
+        self.refund_service = refund_service
 
     async def check_access(self, user_id: UUID, product_id: UUID) -> bool:
         key = f'{user_id}.{product_id}'
@@ -90,7 +94,11 @@ class UserService(CRUDBase):
         return db_obj
 
     async def refund(self, user_id: Any, subscription_id: Any):
-        pass
+        subscription = await self.subscription_service.get(subscription_id)
+        if not subscription:
+            raise SubscriptionNotFound
+
+        await self.refund_service.refund(subscription)
 
 
 @lru_cache()
@@ -99,6 +107,7 @@ def get_user_service(
         cache: Redis = Depends(get_cache),
         product_service: ProductService = Depends(get_product_service),
         subscription_service: SubscriptionService = Depends(get_subscription_service),
+        refund_service: RefundService = Depends(get_refund_service),
 ) -> UserService:
     return UserService(
         db,
@@ -106,4 +115,5 @@ def get_user_service(
         Subscription,
         product_service,
         subscription_service,
+        refund_service,
     )
