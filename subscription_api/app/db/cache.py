@@ -1,9 +1,6 @@
-import abc
-import socket
-from typing import Optional, Any, AsyncIterator
+from typing import AsyncIterator
 
 import aioredis
-import backoff
 from aioredis import Redis
 
 from app.core.config import settings
