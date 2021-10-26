@@ -5,7 +5,7 @@ from datetime import datetime, timedelta
 
 import aiohttp
 import pytest
-from jose import jwt
+import jwt
 from multidict import CIMultiDictProxy
 
 from .settings import (ALGORITHM, SECRET_KEY, USER_ID, SUBSCRIPTION_API_URL, SUBSCRIPTION_API_VERSION, PAYMENTS_API_URL,
