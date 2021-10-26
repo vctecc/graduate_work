@@ -1,5 +1,5 @@
 
-build_billing_dev:
+dev:
 	docker compose -f docker-compose.dev.yaml up --build -d
 
 db_dev:
@@ -7,7 +7,7 @@ db_dev:
 
 init_db:
 	docker exec -it payment_api bash -c 'cd src/db/; alembic upgrade head'
-	docker exec -it subscription_api bash -c 'cd src/db/; alembic upgrade head'
+	docker exec -it subscription_api bash -c 'alembic upgrade head'
 	docker exec -it subscription_api bash -c 'python init_test_data.py'
 
 test:
@@ -24,7 +24,7 @@ test_run:
 	docker exec -it subscription_api bash -c 'cd tests/functional; pytest'
 
 test_clear:
+	docker compose -f docker-compose.test.yaml stop
 	docker compose -f docker-compose.test.yaml rm --force
 	docker volume rm redis_data_test
 	docker volume rm postgresdata_test
-
