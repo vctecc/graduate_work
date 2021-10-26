@@ -1,14 +1,26 @@
-
-build_billing_dev:
+build:
 	docker compose -f docker-compose.dev.yaml up --build -d
 
-db_dev:
+dev:
 	docker compose -f docker-compose.dev.yaml up postgres rabbit redis --build -d
 
 init_db:
 	docker exec -it payment_api bash -c 'cd src/db/; alembic upgrade head'
-	docker exec -it subscription_api bash -c 'cd src/db/; alembic upgrade head'
+	docker exec -it subscription_api bash -c 'alembic upgrade head'
 	docker exec -it subscription_api bash -c 'python init_test_data.py'
+
+all:
+	make build
+	make init_db
+
+stop:
+	docker compose -f docker-compose.dev.yaml stop
+
+clean:
+	make stop
+	docker compose -f docker-compose.dev.yaml rm --force
+
+
 
 test: $(CLEAR)
 	make test_build

@@ -40,8 +40,8 @@ class DataBaseSettings(BaseSettings):
 
 
 class CacheSettings(BaseSettings):
-    host: str = Field("127.0.0.1", env="CACHE_HOST")
-    port: int = Field(6379, env="CACHE_PORT")
+    host: str = Field("127.0.0.1", env="REDIS_HOST")
+    port: int = Field(6379, env="REDIS_PORT")
     expire: int = Field(420, env="CACHE_EXPIRE")
 
 
