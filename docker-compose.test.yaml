@@ -30,22 +30,26 @@ services:
       - test.env
 
   postgres-tests:
-    extends:
-      file: docker-compose.yaml
-      service: postgres
+    build: ./db
+    networks:
+      - movies-api-network
+    restart: on-failure
     volumes:
       - postgresdata_test:/var/lib/postgresql/data
     ports:
-      - "54321:5432"
+      - "5434:5432"
     env_file:
       - test.env
 
   redis:
-    extends:
-      file: docker-compose.yaml
-      service: redis
+    image: redis:6.0.9
+    ports:
+      - "6379:6379"
     volumes:
       - redis_data_test:/opt/app/redis/data
+    networks:
+      - movies-api-network
+    restart: on-failure
 
   rabbit:
     extends:
