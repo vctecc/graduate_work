@@ -1,11 +1,9 @@
 from fastapi import Depends
 from sqlalchemy import select
 from sqlalchemy.orm import Session
-
 from src.db.session import get_db
-from src.models import Customer
-from src.providers.base import AbstractProvider
-from src.providers.default import get_default_provider
+from src.models.customer import Customer
+from src.providers.base import AbstractProvider, get_default_provider
 
 
 class CustomerService(object):
@@ -17,10 +15,10 @@ class CustomerService(object):
     async def get_customer(self, user_id) -> Customer:
         customer = await self.db.execute(
             select(
-                Customer.id, Customer.provider_customer_id
+                Customer.id, Customer.provider_customer_id,
             ).where(
-                Customer.user_id == user_id
-            )
+                Customer.user_id == user_id,
+            ),
         )
         customer = customer.first()
         if not customer:
@@ -45,5 +43,5 @@ def get_customer_service(
 ):
     return CustomerService(
         db=db,
-        provider=provider
+        provider=provider,
     )

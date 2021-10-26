@@ -9,7 +9,7 @@ class PaymentSchema(AbstractSchema):
     user_id: str
     status: PaymentState
 
-    class Config:
+    class Config:   # noqa: WPS431
         orm_mode = True
         use_enum_values = True
 
@@ -30,7 +30,7 @@ class UpdatePaymentSchema(AbstractSchema):
     invoice_id: str
     status: PaymentState
 
-    class Config:
+    class Config:   # noqa: WPS431
         use_enum_values = True
 
 

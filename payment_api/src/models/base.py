@@ -1,5 +1,4 @@
 from sqlalchemy import Column, Integer
-
 from src.db.session import Base
 
 

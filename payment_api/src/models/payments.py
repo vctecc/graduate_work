@@ -1,7 +1,6 @@
 import enum
 
 from sqlalchemy import Column, Enum, ForeignKey, String
-
 from src.models.base import AbstractModel
 
 

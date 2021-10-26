@@ -3,27 +3,24 @@ from functools import lru_cache
 from fastapi import Depends
 from sqlalchemy import desc, select, update
 from sqlalchemy.orm import Session
-
 from src.core.auth import get_auth
 from src.db.session import get_db
-from src.models import Customer, Payment, PaymentState
-from src.providers.base import AbstractProvider
-from src.providers.schemas import ProviderPayment
-from src.providers.default import get_default_provider
-from src.providers.schemas import ProviderPaymentCancel
-from src.schemas.payment import (AddPaymentSchema, NewPaymentResult,
-                                 NewPaymentSchema, PaymentCancel,
-                                 PaymentSchema, UpdatePaymentSchema)
+from src.models.customer import Customer
+from src.models.payments import Payment, PaymentState
+from src.providers.base import AbstractProvider, get_default_provider
+from src.providers.schemas import ProviderPayment, ProviderPaymentCancel
+from src.schemas.payment import (
+    AddPaymentSchema, NewPaymentResult, NewPaymentSchema, PaymentCancel, PaymentSchema, UpdatePaymentSchema,
+)
 from src.schemas.subscriptions import SubscriptionSchema
 from src.services.customers import CustomerService, get_customer_service
 from src.services.exceptions import PaymentNotFound
-from src.services.subscriptions import (SubscriptionService,
-                                        get_subscriptions_service)
+from src.services.subscriptions import SubscriptionService, get_subscriptions_service
 
 
 class PaymentAuthenticatedService(object):
 
-    def __init__(
+    def __init__(  # noqa: WPS211
             self,
             db: Session,
             user_id: str,
@@ -44,7 +41,7 @@ class PaymentAuthenticatedService(object):
         provider_payment = ProviderPayment(
             amount=product.price,
             currency=payment.currency,
-            customer=customer.provider_customer_id
+            customer=customer.provider_customer_id,
         )
         invoice = await self.provider.create_payment(provider_payment)
 
@@ -52,7 +49,7 @@ class PaymentAuthenticatedService(object):
             customer_id=customer.id,
             invoice_id=invoice.id,
             product_id=product.id,
-            status=PaymentState.PROCESSING
+            status=PaymentState.PROCESSING,
         )
         self.db.add(payment_db)
         await self.db.commit()
@@ -82,10 +79,10 @@ class PaymentService(object):
                 Payment.product_id,
                 Customer.user_id,
             ).outerjoin(
-                Customer, Payment.customer_id == Customer.id
+                Customer, Payment.customer_id == Customer.id,
             ).where(
-                Payment.invoice_id == invoice_id
-            )
+                Payment.invoice_id == invoice_id,
+            ),
         )
         if not payment:
             raise PaymentNotFound
@@ -98,8 +95,8 @@ class PaymentService(object):
                 Payment.id,
                 Payment.invoice_id,
             ).where(
-                Payment.customer_id == customer_id
-            ).order_by(desc(Payment.id))
+                Payment.customer_id == customer_id,
+            ).order_by(desc(Payment.id)),
         )
         if not payment:
             raise PaymentNotFound
@@ -121,7 +118,7 @@ class PaymentService(object):
             amount=payment.amount,
             currency=payment.currency,
             customer=customer.provider_customer_id,
-            confirm=True
+            confirm=True,
         )
         invoice = await self.provider.create_payment(provider_payment)
 
@@ -139,22 +136,22 @@ class PaymentService(object):
                 Payment.status,
                 Customer.user_id,
             ).outerjoin(
-                Customer, Payment.customer_id == Customer.id
+                Customer, Payment.customer_id == Customer.id,
             ).where(
-                Payment.status == PaymentState.PROCESSING
-            )
+                Payment.status == PaymentState.PROCESSING,
+            ),
         )
         return processing_payments.all()
 
     async def update_status(self, payment: UpdatePaymentSchema):
         await self.db.execute(
             update(
-                Payment
+                Payment,
             ).where(
-                Payment.invoice_id == payment.invoice_id
+                Payment.invoice_id == payment.invoice_id,
             ).values(
-                status=payment.status
-            )
+                status=payment.status,
+            ),
         )
         payment_db = await self.get_payment(payment.invoice_id)
 
@@ -176,13 +173,13 @@ class PaymentService(object):
             amount=cancel_info.amount,
             currency=cancel_info.currency,
             customer=customer.provider_customer_id,
-            payment=payment.invoice_id
+            payment=payment.invoice_id,
         )
         await self.provider.cancel(provider_cancel)
 
         update_payment = UpdatePaymentSchema(
             invoice_id=payment.invoice_id,
-            status=PaymentState.CANCELED
+            status=PaymentState.CANCELED,
         )
         await self.update_status(update_payment)
 

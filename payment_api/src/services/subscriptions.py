@@ -1,5 +1,4 @@
 import aiohttp
-
 from src.core.config import SubscriptionsSettings, settings
 from src.schemas.subscriptions import ProductSchema, SubscriptionSchema
 
@@ -34,12 +33,12 @@ class SubscriptionMock(object):
         return ProductSchema(
             id='a49b436a-d0b3-4e3e-84e5-ac9204a330a5',
             name='the podpiska',
-            price=10000
+            price=10000,
         )
 
     @classmethod
     async def update_subscription(cls, subscription: SubscriptionSchema) -> None:
-        ...
+        ...  # noqa: WPS428, WPS400
 
 
 def get_subscriptions_service():

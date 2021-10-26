@@ -2,7 +2,7 @@ import orjson
 from pydantic import BaseModel
 
 
-def orjson_dumps(v, *, default):
+def orjson_dumps(v, *, default):  # noqa: WPS111
     # orjson.dumps retuns bytes, but pydantic requires unicode
     return orjson.dumps(v, default=default).decode()
 
@@ -16,7 +16,7 @@ class BaseOrjsonModel(BaseModel):
 
 
 class AbstractSchema(BaseOrjsonModel):
-    ...
+    ...  # noqa: WPS428, WPS604
 
 
 class ListQuery(BaseOrjsonModel):
