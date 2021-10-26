@@ -14,67 +14,67 @@ logger = logging.getLogger(__name__)
 
 START_DATE = datetime.strptime("2021-10-15", "%Y-%m-%d")
 PRODUCTS = (
-        {
-            "id": "a49b436a-d0b3-4e3e-84e5-ac9204a330a5",
-            "name": "Rick and Morty",
-            "description": "Adult animated science fiction sitcom.",
-            "price": 20000,
-            "currency_code": "RUB",
-            "period": 30,
-            "is_active": True
-        },
-        {
-            "id": "a49b436a-d0b3-4e3e-84e5-ac9204a33666",
-            "name": "Goose",
-            "description": "Most important film.",
-            "price": 20000,
-            "currency_code": "RUB",
-            "period": 30,
-            "is_active": False
-        },
-    )
+    {
+        "id": "a49b436a-d0b3-4e3e-84e5-ac9204a330a5",
+        "name": "Rick and Morty",
+        "description": "Adult animated science fiction sitcom.",
+        "price": 20000,
+        "currency_code": "RUB",
+        "period": 30,
+        "is_active": True
+    },
+    {
+        "id": "a49b436a-d0b3-4e3e-84e5-ac9204a33666",
+        "name": "Goose",
+        "description": "Most important film.",
+        "price": 20000,
+        "currency_code": "RUB",
+        "period": 30,
+        "is_active": False
+    },
+)
 SUBSCRIPTIONS = (
-        {
-            "id": "429b436a-d0b3-4e3e-84e5-ac9204a33042",
-            "user_id": "a49b436a-d0b3-4e3e-84e5-ac9204a33042",
-            "product_id": "a49b436a-d0b3-4e3e-84e5-ac9204a330a5",
-            "state": "active",
-            "start_date": START_DATE,
-            "end_date": START_DATE + timedelta(days=30),
-        },
-        {
-            "id": "429b436a-d0b3-4e3e-84e5-789204a33042",
-            "user_id": "a49b436a-d0b3-4e3e-84e5-ac9204a33042",
-            "product_id": "a49b436a-d0b3-4e3e-84e5-ac9204a330a5",
-            "state": "active",
-            "start_date": START_DATE,
-            "end_date": START_DATE + timedelta(days=30),
-        },
-        {
-            "id": "429b436a-d042-4e3e-84e5-789204a33042",
-            "user_id": "a49b436a-d0b3-4e3e-84e5-ac9204a33042",
-            "product_id": "a49b436a-d0b3-4e3e-84e5-ac9204a330a5",
-            "state": "active",
-            "start_date": START_DATE,
-            "end_date": START_DATE + timedelta(days=30),
-        },
-        {
-            "id": "429b436a-d042-4e3e-1488-789204a33042",
-            "user_id": "a49b436a-d0b3-4e3e-84e5-ac9204a33042",
-            "product_id": "a49b436a-d0b3-4e3e-84e5-ac9204a330a5",
-            "state": "active",
-            "start_date": START_DATE - timedelta(days=30),
-            "end_date": START_DATE,
-        },
-        {
-            "id": "429b436a-d042-4e3e-2866-789204a33042",
-            "user_id": "a49b436a-d0b3-4e3e-84e5-ac9204a33042",
-            "product_id": "a49b436a-d0b3-4e3e-84e5-ac9204a330a5",
-            "state": "active",
-            "start_date": START_DATE - timedelta(days=30),
-            "end_date": START_DATE,
-        },
-    )
+    {
+        "id": "429b436a-d0b3-4e3e-84e5-ac9204a33042",
+        "user_id": "a49b436a-d0b3-4e3e-84e5-ac9204a33042",
+        "product_id": "a49b436a-d0b3-4e3e-84e5-ac9204a330a5",
+        "state": "active",
+        "start_date": START_DATE,
+        "end_date": START_DATE + timedelta(days=30),
+    },
+    {
+        "id": "429b436a-d0b3-4e3e-84e5-789204a33042",
+        "user_id": "a49b436a-d0b3-4e3e-84e5-ac9204a33042",
+        "product_id": "a49b436a-d0b3-4e3e-84e5-ac9204a330a5",
+        "state": "active",
+        "start_date": START_DATE,
+        "end_date": START_DATE + timedelta(days=30),
+    },
+    {
+        "id": "429b436a-d042-4e3e-84e5-789204a33042",
+        "user_id": "a49b436a-d0b3-4e3e-84e5-ac9204a33042",
+        "product_id": "a49b436a-d0b3-4e3e-84e5-ac9204a330a5",
+        "state": "active",
+        "start_date": START_DATE,
+        "end_date": START_DATE + timedelta(days=30),
+    },
+    {
+        "id": "429b436a-d042-4e3e-1488-789204a33042",
+        "user_id": "a49b436a-d0b3-4e3e-84e5-ac9204a33042",
+        "product_id": "a49b436a-d0b3-4e3e-84e5-ac9204a330a5",
+        "state": "active",
+        "start_date": START_DATE - timedelta(days=30),
+        "end_date": START_DATE,
+    },
+    {
+        "id": "429b436a-d042-4e3e-2866-789204a33042",
+        "user_id": "a49b436a-d0b3-4e3e-84e5-ac9204a33042",
+        "product_id": "a49b436a-d0b3-4e3e-84e5-ac9204a330a5",
+        "state": "active",
+        "start_date": START_DATE - timedelta(days=30),
+        "end_date": START_DATE,
+    },
+)
 
 
 async def db_add(model, objs: tuple):
