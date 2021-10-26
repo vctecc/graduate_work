@@ -3,4 +3,4 @@ __pycache__/
 flake-report/
 /.idea
 /venv
-/.pytest_cache
+.pytest_cache
