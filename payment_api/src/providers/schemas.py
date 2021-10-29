@@ -19,4 +19,3 @@ class ProviderPaymentCancel(ProviderBase):
 class ProviderPaymentResult(AbstractSchema):
     id: str
     client_secret: str
-

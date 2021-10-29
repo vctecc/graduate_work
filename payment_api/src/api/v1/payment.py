@@ -1,7 +1,6 @@
 from http import HTTPStatus
 
 from fastapi import APIRouter, Depends, HTTPException
-
 from src.providers.schemas import ProviderPaymentResult
 from src.schemas.payment import (
     NewPaymentSchema, PaymentSchema,
@@ -55,7 +54,7 @@ async def cancel_payment(
     except PaymentNotFound:
         raise HTTPException(
             status_code=HTTPStatus.NOT_FOUND,
-            detail='Payment not found.'
+            detail='Payment not found.',
         )
 
 
@@ -84,5 +83,5 @@ async def update_payment_status(
     except PaymentNotFound:
         raise HTTPException(
             status_code=HTTPStatus.NOT_FOUND,
-            detail='Payment not found.'
+            detail='Payment not found.',
         )

@@ -15,10 +15,10 @@ def patch_subscription():
     )
     patch(
         'src.services.subscriptions.SubscriptionService.get_product',
-        return_value=product
+        return_value=product,
     )
 
     patch(
         'src.services.subscriptions.SubscriptionService.update_subscription',
-        return_value=None
+        return_value=None,
     )
