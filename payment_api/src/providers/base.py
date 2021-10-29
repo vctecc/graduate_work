@@ -17,7 +17,7 @@ class AbstractProvider(abc.ABC):
         ...  # noqa: WPS428
 
     @abc.abstractmethod
-    async def cancel(self, cancel: ProviderPaymentCancel):
+    async def cancel(self, cancel: ProviderPaymentCancel) -> None:
         ...  # noqa: WPS428
 
 

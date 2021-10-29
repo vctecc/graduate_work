@@ -1,9 +1,10 @@
 from http import HTTPStatus
 
 from fastapi import APIRouter, Depends, HTTPException
+
 from src.providers.schemas import ProviderPaymentResult
 from src.schemas.payment import (
-    NewPaymentResult, NewPaymentSchema, PaymentSchema,
+    NewPaymentSchema, PaymentSchema,
     AddPaymentSchema, PaymentCancel, UpdatePaymentSchema,
 )
 from src.services.exceptions import PaymentNotFound

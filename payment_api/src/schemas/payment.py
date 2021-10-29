@@ -1,5 +1,5 @@
-from src.models import PaymentState
-from src.schemas import AbstractSchema
+from src.models.payments import PaymentState
+from src.schemas.base import AbstractSchema
 
 
 class PaymentSchema(AbstractSchema):
