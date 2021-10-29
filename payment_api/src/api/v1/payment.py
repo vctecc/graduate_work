@@ -41,7 +41,11 @@ async def add_payment(
     await payment_service.add_payment(payment)
 
 
-@router.patch("/payments/cancel/")
+@router.post(
+    "/payments/cancel/",
+    status_code=200,
+    description='Возврат денег пользователю.',
+)
 async def cancel_payment(
         cancel_info: PaymentCancel,
         payment_service: PaymentService = Depends(get_payment_service),
