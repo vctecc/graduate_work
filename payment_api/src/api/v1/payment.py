@@ -20,13 +20,12 @@ router = APIRouter()
     "/payments/new",
     status_code=201,
     response_model=ProviderPaymentResult,
-    status_code=201,
     description='Проведение платежа с клиента.',
 )
 async def new_payment(
         payment: NewPaymentSchema,
         payment_service: PaymentAuthenticatedService = Depends(get_payment_auth_service),
-) -> NewPaymentResult:
+) -> ProviderPaymentResult:
     return await payment_service.new_payment(payment)
 
 

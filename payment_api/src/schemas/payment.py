@@ -34,11 +34,6 @@ class UpdatePaymentSchema(AbstractSchema):
         use_enum_values = True
 
 
-class NewPaymentResult(AbstractSchema):
-    id: str
-    client_secret: str
-
-
 class PaymentCancel(AbstractSchema):
     user_id: str
     amount: int

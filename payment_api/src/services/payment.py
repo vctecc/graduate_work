@@ -8,9 +8,9 @@ from src.db.session import get_db
 from src.models.customer import Customer
 from src.models.payments import Payment, PaymentState
 from src.providers.base import AbstractProvider, get_default_provider
-from src.providers.schemas import ProviderPayment, ProviderPaymentCancel
+from src.providers.schemas import ProviderPayment, ProviderPaymentCancel, ProviderPaymentResult
 from src.schemas.payment import (
-    AddPaymentSchema, NewPaymentResult, NewPaymentSchema, PaymentCancel, PaymentSchema, UpdatePaymentSchema,
+    AddPaymentSchema, NewPaymentSchema, PaymentCancel, PaymentSchema, UpdatePaymentSchema,
 )
 from src.schemas.subscriptions import SubscriptionSchema
 from src.services.customers import CustomerService, get_customer_service
@@ -34,7 +34,7 @@ class PaymentAuthenticatedService(object):
         self.subscriptions = subscriptions
         self.customers = customers
 
-    async def new_payment(self, payment: NewPaymentSchema) -> NewPaymentResult:
+    async def new_payment(self, payment: NewPaymentSchema) -> ProviderPaymentResult:
         customer = await self.customers.get_customer(self.user_id)
         product = await self.subscriptions.get_product(payment.product)
 
@@ -52,9 +52,8 @@ class PaymentAuthenticatedService(object):
             status=PaymentState.PROCESSING,
         )
         self.db.add(payment_db)
-        await self.db.commit()
 
-        return NewPaymentResult(id=invoice.id, client_secret=invoice.client_secret)
+        return invoice
 
 
 class PaymentService(object):
@@ -125,7 +124,6 @@ class PaymentService(object):
         payment_db.invoice_id = invoice.id
         payment_db.status = PaymentState.PROCESSING
         self.db.add(payment_db)
-        await self.db.commit()
 
     async def get_processing(self) -> list[PaymentSchema]:
         processing_payments = await self.db.execute(
@@ -161,8 +159,6 @@ class PaymentService(object):
                 product_id=payment_db.product_id,
             )
             await self.subscriptions.update_subscription(subscription)
-
-        await self.db.commit()
 
     async def cancel(self, cancel_info: PaymentCancel):
 
