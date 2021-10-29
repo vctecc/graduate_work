@@ -4,7 +4,6 @@ from src.providers.schemas import (
     ProviderPayment, ProviderPaymentCancel, ProviderPaymentResult,
 )
 from src.schemas.customer import CustomerSchema
-from src.core.config import settings
 
 
 class AbstractProvider(abc.ABC):
@@ -23,8 +22,5 @@ class AbstractProvider(abc.ABC):
 
 
 def get_default_provider():
-    from src.providers.stripe.provider import StripeProvider, StripeProviderMock
-    if settings.test:
-        return StripeProviderMock()
-
+    from src.providers.stripe.provider import StripeProvider
     return StripeProvider()

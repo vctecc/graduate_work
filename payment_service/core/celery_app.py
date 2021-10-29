@@ -6,14 +6,17 @@ from .config import settings
 
 app = Celery('payment_service', broker=settings.broker_url, include=['tasks'])
 
-SCHEDULE = timedelta(seconds=30)
+if settings.test:
+    SCHEDULE = timedelta(seconds=1)
+else:
+    SCHEDULE = timedelta(minutes=5)
 
 CELERYBEAT_SCHEDULE = {
     'handle_pending_payments': {
         'task': 'handle_pending_payments',
         'schedule': SCHEDULE,
         'options': {'queue': 'payments'},
-        'args': ()
+        'args': tuple(),
     },
 }
 

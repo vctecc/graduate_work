@@ -8,6 +8,7 @@ from fastapi.responses import ORJSONResponse
 from src.api.v1 import payment
 from src.core.config import settings
 from src.core.logger import LOGGING
+from src.common.tests import patch_services
 
 app = FastAPI(
     title=settings.project_name,
@@ -20,6 +21,9 @@ app = FastAPI(
 @app.on_event("startup")
 async def startup():
     stripe.api_key = settings.stripe_secret_key
+
+    if settings.test:
+        patch_services()
 
 
 @app.on_event("shutdown")

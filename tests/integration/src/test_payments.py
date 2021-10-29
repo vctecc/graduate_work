@@ -1,4 +1,5 @@
 from time import sleep
+from http import HTTPStatus
 
 import pytest
 
@@ -22,7 +23,7 @@ async def test_new_payment(
         headers=headers,
         data=data
     )
-    assert response.status == 201, "Couldn't create payment."
+    assert response.status == HTTPStatus.CREATED, "Couldn't create payment."
 
     # Update status for created payment
     data = {
@@ -30,14 +31,14 @@ async def test_new_payment(
         "status": "paid"
     }
     response = await make_patch_request(f"{payments_url}/payments/update_status", data=data)
-    assert response.status == 200, "Couldn't update payment."
+    assert response.status == HTTPStatus.OK, "Couldn't update payment."
 
     # Get user subscription
     url = f"{subscriptions_url}/user/subscription"
     response = await make_get_request(url, headers=headers)
 
-    assert response.status == 200, "Couldn't get user subscriptions"
-    assert len(response.body) == 1, "Incorrect number of subscriptions"
+    assert response.status == HTTPStatus.OK, "Couldn't get user subscriptions"
+    assert len(response.body) == 7, "Incorrect number of subscriptions"
 
 
 @pytest.mark.asyncio
@@ -60,18 +61,18 @@ async def test_add_payment(
         f"{payments_url}/payments/",
         data=data
     )
-    assert response.status == 201, "Couldn't add payment."
+    assert response.status == HTTPStatus.CREATED, "Couldn't add payment."
 
     # wait for scheduler work
-    sleep(40)
+    sleep(2)
 
     response = await make_get_request(f"{payments_url}/payments/processing")
-    assert response.status == 200, "Couldn't get processing payments."
+    assert response.status == HTTPStatus.OK, "Couldn't get processing payments."
     assert len(response.body) == 0, "Worker didn't update status."
 
     # Get user subscription
     url = f"{subscriptions_url}/user/subscription"
     response = await make_get_request(url, headers=headers)
 
-    assert response.status == 200, "Couldn't get user subscriptions"
-    assert len(response.body) == 1, "Incorrect number of subscriptions"
+    assert response.status == HTTPStatus.OK, "Couldn't get user subscriptions"
+    assert len(response.body) == 7, "Incorrect number of subscriptions"

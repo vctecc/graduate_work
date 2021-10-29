@@ -43,18 +43,3 @@ class StripeProvider(AbstractProvider):
             return None
 
         return methods['data'][0]['id']
-
-
-class StripeProviderMock(AbstractProvider):
-
-    async def create_customer(self) -> CustomerSchema:
-        return CustomerSchema(id='cus_KSkOhnNYigh8Mc')
-
-    async def create_payment(self, payment: ProviderPayment) -> ProviderPaymentResult:
-        return ProviderPaymentResult(  # noqa: S106
-            id='pi_3JnrIvEZwW9AoJC20hPPg3ua',
-            client_secret='big_secret',
-        )
-
-    async def cancel(self, cancel: ProviderPaymentCancel):
-        ...  # noqa: WPS428

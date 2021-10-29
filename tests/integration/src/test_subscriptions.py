@@ -1,4 +1,5 @@
 from time import sleep
+from http import HTTPStatus
 
 import pytest
 
@@ -18,11 +19,11 @@ async def test_subscription(
     }
     url = f"{subscriptions_url}/service/subscription"
     response = await make_post_request(url, data=data)
-    assert response.status == 200, "Couldn't add subscription."
+    assert response.status == HTTPStatus.OK, "Couldn't add subscription."
 
     # wait for scheduler work
-    sleep(40)
+    sleep(3)
 
     response = await make_get_request(f"{subscriptions_url}/service/orders")
-    assert response.status == 200, "Couldn't get processing orders."
+    assert response.status == HTTPStatus.OK, "Couldn't get processing orders."
     assert len(response.body) == 0, "Worker didn't update status."

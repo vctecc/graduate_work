@@ -11,6 +11,7 @@ from src.models.customer import Customer
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+# It's test customer in provider that has card saved
 CUSTOMERS = (
     {
         "id": 1,

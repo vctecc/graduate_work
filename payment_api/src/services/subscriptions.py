@@ -25,23 +25,5 @@ class SubscriptionService(object):
         await session.close()
 
 
-class SubscriptionMock(object):
-
-    @classmethod
-    async def get_product(cls, product_id: str) -> ProductSchema:
-        return ProductSchema(
-            id='a49b436a-d0b3-4e3e-84e5-ac9204a330a5',
-            name='the podpiska',
-            price=10000,
-        )
-
-    @classmethod
-    async def update_subscription(cls, subscription: SubscriptionSchema) -> None:
-        ...  # noqa: WPS428, WPS400
-
-
 def get_subscriptions_service():
-    if settings.test:
-        return SubscriptionMock()
-
     return SubscriptionService()
