@@ -30,6 +30,7 @@ class MultiDBModelAdmin(ExportMixin, admin.ModelAdmin):
 @admin.register(Customer)
 class CustomerAdmin(MultiDBModelAdmin):
     search_fields = ['user_id', 'provider_customer_id']
+    list_filter = ('user_id', 'provider_customer_id')
 
 
 @admin.register(Payment)
