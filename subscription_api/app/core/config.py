@@ -75,6 +75,7 @@ class ProjectSettings(BaseSettings):
     cache = CacheSettings()
     backoff = BackoffSettings()
     auth = AuthSettings()
+    test: bool = Field(False, env="SUBSCRIPTIONS_TEST")
 
 
 settings = ProjectSettings()

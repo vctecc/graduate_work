@@ -6,6 +6,7 @@ dev:
 
 init_db:
 	docker exec -it payment_api bash -c 'cd src/db/; alembic upgrade head'
+	docker exec -it payment_api bash -c 'python init_test_data.py'
 	docker exec -it subscription_api bash -c 'alembic upgrade head'
 	docker exec -it subscription_api bash -c 'python init_test_data.py'
 
@@ -20,18 +21,27 @@ clean:
 	make stop
 	docker compose -f docker-compose.dev.yaml rm --force
 
-test:
+
+
+test: $(CLEAR)
 	make test_build
 	make init_db
 	make test_run
-	make test_clear
+
+	if $(CLEAR)
+		make test_clear
+	endif
 
 test_build:
 	docker compose -f docker-compose.test.yaml up --build -d
 
 test_run:
-	docker exec -it payment_api bash -c 'cd tests/functional; pytest'
-	docker exec -it subscription_api bash -c 'cd tests/functional; pytest'
+	docker exec -it payment_api bash -c 'pytest tests/functional'
+	docker exec -it subscription_api bash -c 'pytest tests/functional'
+
+	# To run integration tests we have to disable mocks by changing env variables
+	docker exec -it payment_api bash -c 'export PAYMENTS_TEST=0; export PAYMENTS_WORKER_TEST=0'
+	pytest tests/integration/
 
 test_clear:
 	docker compose -f docker-compose.test.yaml stop

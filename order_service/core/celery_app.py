@@ -7,7 +7,10 @@ from .config import settings
 app = Celery('order_service', broker=settings.broker_url,
              include=['tasks'])
 
-SCHEDULE = timedelta(seconds=30)
+if settings.test:
+    SCHEDULE = timedelta(seconds=1)
+else:
+    SCHEDULE = timedelta(hours=12)
 
 CELERYBEAT_SCHEDULE = {
     'handle_payment_orders': {

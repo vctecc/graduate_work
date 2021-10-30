@@ -23,7 +23,7 @@ async def test_user_get_subscriptions(headers, api_url, make_get_request):
     response = await make_get_request(url, headers=headers)
 
     assert response.status == 200, "Couldn't get user subscriptions"
-    assert len(response.body) == 5, "Incorrect number of subscriptions"
+    assert len(response.body) == 6, "Incorrect number of subscriptions"
 
 
 @pytest.mark.asyncio

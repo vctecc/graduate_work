@@ -1,5 +1,5 @@
-from src.models import PaymentState
-from src.schemas import AbstractSchema
+from src.models.payments import PaymentState
+from src.schemas.base import AbstractSchema
 
 
 class PaymentSchema(AbstractSchema):
@@ -9,7 +9,7 @@ class PaymentSchema(AbstractSchema):
     user_id: str
     status: PaymentState
 
-    class Config:
+    class Config:   # noqa: WPS431
         orm_mode = True
         use_enum_values = True
 
@@ -30,13 +30,8 @@ class UpdatePaymentSchema(AbstractSchema):
     invoice_id: str
     status: PaymentState
 
-    class Config:
+    class Config:   # noqa: WPS431
         use_enum_values = True
-
-
-class NewPaymentResult(AbstractSchema):
-    id: str
-    client_secret: str
 
 
 class PaymentCancel(AbstractSchema):

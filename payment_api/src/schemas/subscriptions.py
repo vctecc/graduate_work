@@ -1,4 +1,4 @@
-from src.schemas import AbstractSchema
+from src.schemas.base import AbstractSchema
 
 
 class ProductSchema(AbstractSchema):

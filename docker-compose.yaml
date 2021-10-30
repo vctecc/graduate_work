@@ -27,8 +27,6 @@ services:
 
   redis:
     image: redis:6.0.9
-    ports:
-      - "6379:6379"
     volumes:
       - redis-data:/opt/app/redis/data
     networks:
@@ -45,8 +43,6 @@ services:
 
   rabbit:
     image: rabbitmq:latest
-    ports:
-      - "5672:5672"
     logging:
       driver: none
     networks:
