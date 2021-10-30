@@ -12,6 +12,10 @@ class BaseModel(models.Model):
         abstract = True
 
 
+ACTIVE_STATUS = 'ACTIVE'
+INACTIVE_STATUS = 'INACTIVE'
+
+
 class Product(BaseModel):
     name = models.CharField(max_length=255)
     description = models.CharField(max_length=255, blank=True, null=True)
@@ -25,10 +29,11 @@ class Product(BaseModel):
         db_table = 'product'
 
     def __str__(self):
+
         if self.is_active:
-            status = "ACTIVE"
+            status = ACTIVE_STATUS
         else:
-            status = "INACTIVE"
+            status = INACTIVE_STATUS
         return f"[{status}] {self.name} for {self.period} days at the price of {self.price} {self.currency_code}"
 
 
