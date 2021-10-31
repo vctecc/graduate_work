@@ -37,6 +37,7 @@ test_build:
 
 test_run:
 	docker exec -it payment_api bash -c 'pytest tests/functional'
+	docker exec -it subscription_api bash -c 'python init_test_data.py'
 	docker exec -it subscription_api bash -c 'pytest tests/functional'
 
 	# To run integration tests we have to disable mocks by changing env variables

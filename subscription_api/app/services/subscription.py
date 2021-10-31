@@ -55,6 +55,23 @@ class SubscriptionService(CRUDBase):
         if not obj.end_date:
             obj.end_date = obj.start_date + timedelta(days=product.period)
 
+        subscription = await self.db.execute(
+            select(
+                self.model
+            ).where(
+                self.model.user_id == obj.user_id,
+                self.model.product_id == obj.product_id
+            ).options(
+                selectinload(self.model.product)
+            )
+        )
+
+        subscription = subscription.scalar_one_or_none()
+        if subscription:
+            subscription.end_date = obj.end_date
+            await self.db.commit()
+            return subscription
+
         return await self.create(obj.dict())
 
     async def change_state(self, _id: Any, state: str) -> Optional[Subscription]:
