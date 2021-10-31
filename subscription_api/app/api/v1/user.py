@@ -14,7 +14,7 @@ user_router = APIRouter()
 
 @user_router.get("/subscription",
                  response_model=List[SubscriptionPreview],
-                 status_code=200)
+                 status_code=HTTPStatus.OK)
 async def get_user_subscriptions(
         user: User = Depends(get_current_user),
         service: UserService = Depends(get_user_service)
@@ -29,7 +29,7 @@ async def get_user_subscriptions(
 
 @user_router.get("/subscription/{subscription_id}",
                  response_model=SubscriptionDetails,
-                 status_code=200)
+                 status_code=HTTPStatus.OK)
 async def get_subscription_details(
         subscription_id: UUID,
         user: User = Depends(get_current_user),
@@ -45,7 +45,7 @@ async def get_subscription_details(
 
 @user_router.delete("/subscription/{subscription_id}",
                     response_model=SubscriptionPreview,
-                    status_code=200)
+                    status_code=HTTPStatus.OK)
 async def cancel_subscription(
         subscription_id: UUID,
         user: User = Depends(get_current_user),
@@ -60,7 +60,7 @@ async def cancel_subscription(
 
 
 @user_router.post("/refund/{subscription_id}",
-                  status_code=200)
+                  status_code=HTTPStatus.OK)
 async def refund_subscription(
         subscription_id: UUID,
         user: User = Depends(get_current_user),
@@ -76,7 +76,8 @@ async def refund_subscription(
                             detail=TRY_LATER)
 
 
-@user_router.get("/product/{product_id}", status_code=200)
+@user_router.get("/product/{product_id}",
+                 status_code=HTTPStatus.OK)
 async def check_user_accesses(
         product_id: UUID,
         user: User = Depends(get_current_user),

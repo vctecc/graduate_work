@@ -18,7 +18,7 @@ service_router = APIRouter()
 
 @service_router.post("/subscription",
                      response_model=SubscriptionDetails,
-                     status_code=200)
+                     status_code=HTTPStatus.OK)
 async def create_subscription(
         new_subscription: SubscriptionCreate,
         service: SubscriptionService = Depends(get_subscription_service)
@@ -39,7 +39,7 @@ async def create_subscription(
 
 @service_router.get("/subscription/{subscription_id}",
                     response_model=SubscriptionDetails,
-                    status_code=200)
+                    status_code=HTTPStatus.OK)
 async def get_subscription_details(
         subscription_id: str,
         service: SubscriptionService = Depends(get_subscription_service)
@@ -54,7 +54,7 @@ async def get_subscription_details(
 
 @service_router.post("/subscription/{subscription_id}",
                      response_model=SubscriptionPreview,
-                     status_code=200)
+                     status_code=HTTPStatus.OK)
 async def activate_subscription(
         subscription_id: str,
         period: Optional[int] = Query(None,
@@ -71,7 +71,7 @@ async def activate_subscription(
 
 @service_router.delete("/subscription/{subscription_id}",
                        response_model=SubscriptionPreview,
-                       status_code=200)
+                       status_code=HTTPStatus.OK)
 async def deactivate_subscription(
         subscription_id: str,
         service: SubscriptionService = Depends(get_subscription_service)
@@ -86,7 +86,7 @@ async def deactivate_subscription(
 
 @service_router.get("/orders",
                     response_model=List[Order],
-                    status_code=200)
+                    status_code=HTTPStatus.OK)
 async def get_orders(
         limit: Optional[int] = Query(None),
         service: OrderService = Depends(get_order_service)

@@ -1,4 +1,6 @@
 from datetime import datetime, timedelta
+from http import HTTPStatus
+
 import pytest
 
 PREFIX = "service/subscription"
@@ -23,7 +25,7 @@ async def test_get_subscription_details(api_url, make_get_request):
     _id = '429b436a-d0b3-4e3e-84e5-ac9204a33042'
     url = f"{api_url}/{PREFIX}/{_id}"
     response = await make_get_request(url)
-    assert response.status == 200, "Couldn't get subscription_details"
+    assert response.status == HTTPStatus.OK, "Couldn't get subscription_details"
 
     # NOTE I'm not sure if this is a safe way. Maybe use a deep distinction
     assert response.body == DETAILS
@@ -35,7 +37,7 @@ async def test_inactivate_subscription(api_url, make_delete_request):
     url = f"{api_url}/{PREFIX}/{_id}"
 
     response = await make_delete_request(url)
-    assert response.status == 200, "Couldn't inactivate subscription"
+    assert response.status == HTTPStatus.OK, "Couldn't inactivate subscription"
     assert response.body['state'] == 'inactive'
 
 
@@ -45,7 +47,7 @@ async def test_activate_subscription(api_url, make_post_request):
     url = f"{api_url}/{PREFIX}/{_id}"
 
     response = await make_post_request(url)
-    assert response.status == 200, "Couldn't get activate subscription"
+    assert response.status == HTTPStatus.OK, "Couldn't get activate subscription"
     assert response.body['state'] == 'active'
 
     end_data = datetime.now() + timedelta(days=30)
@@ -59,7 +61,7 @@ async def test_active_subscription_with_custom_period(api_url, make_post_request
     period = 10
 
     response = await make_post_request(url, params={"period": period})
-    assert response.status == 200, "Couldn't change subscription period"
+    assert response.status == HTTPStatus.OK, "Couldn't change subscription period"
     assert response.body['state'] == 'active'
 
     end_data = datetime.now() + timedelta(days=period)
@@ -75,7 +77,7 @@ async def test_create_subscription(api_url, make_post_request):
     }
 
     response = await make_post_request(url, data=new)
-    assert response.status == 200, "Couldn't create new subscription"
+    assert response.status == HTTPStatus.OK, "Couldn't create new subscription"
     assert response.body['state'] == 'active'
 
     end_data = datetime.now() + timedelta(days=30)
