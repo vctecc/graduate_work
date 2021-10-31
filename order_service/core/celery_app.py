@@ -17,7 +17,7 @@ CELERYBEAT_SCHEDULE = {
         'task': 'handle_payment_orders',
         'schedule': SCHEDULE,
         'options': {'queue': 'orders'},
-        'args': ()
+        'args': tuple()
     },
 }
 

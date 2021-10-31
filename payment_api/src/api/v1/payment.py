@@ -17,7 +17,7 @@ router = APIRouter()
 
 @router.post(
     "/payments/new",
-    status_code=201,
+    status_code=HTTPStatus.CREATED,
     response_model=ProviderPaymentResult,
     description='Проведение платежа с клиента.',
 )
@@ -30,7 +30,7 @@ async def new_payment(
 
 @router.post(
     "/payments",
-    status_code=201,
+    status_code=HTTPStatus.CREATED,
     description='Создание платежа из других сервисов.',
 )
 async def add_payment(
@@ -42,7 +42,7 @@ async def add_payment(
 
 @router.post(
     "/payments/cancel/",
-    status_code=200,
+    status_code=HTTPStatus.OK,
     description='Возврат денег пользователю.',
 )
 async def cancel_payment(
@@ -71,7 +71,7 @@ async def get_processing_payments(
 
 @router.patch(
     "/payments/update_status",
-    status_code=200,
+    status_code=HTTPStatus.OK,
     description='Обновление статуса платежа.',
 )
 async def update_payment_status(
