@@ -5,7 +5,7 @@ from fastapi import APIRouter, Depends, HTTPException, Query
 
 from app.schemas import Product, ProductDetail
 from app.services import ProductService, get_product_service
-from .error_messag import PRODUCT_NOT_FOUND
+from .error_message import PRODUCT_NOT_FOUND
 
 product_router = APIRouter()
 

@@ -7,7 +7,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from app.core import User, get_current_user, exceptions
 from app.schemas.subscription import (SubscriptionDetails, SubscriptionPreview)
 from app.services.user import UserService, get_user_service
-from .error_messag import NO_ACCESS_FOR_PRODUCT, SUBSCRIPTION_NOT_FOUND, TRY_LATER
+from .error_message import NO_ACCESS_FOR_PRODUCT, SUBSCRIPTION_NOT_FOUND, TRY_LATER
 
 user_router = APIRouter()
 
