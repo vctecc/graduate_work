@@ -151,6 +151,7 @@ class PaymentService(object):
                 status=payment.status,
             ),
         )
+        await self.db.flush()
         payment_db = await self.get_payment(payment.invoice_id)
 
         if payment.status == PaymentState.PAID:
