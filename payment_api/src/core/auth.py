@@ -29,6 +29,6 @@ async def auth(authorization: HTTPAuthorizationCredentials = Depends(oauth_schem
 
 def get_auth():
     if settings.debug:
-        return 'a49b436a-d0b3-4e3e-84e5-ac9204a33042'
+        return '3fa85f64-5717-4562-b3fc-2c963f66afa6'
 
     return auth

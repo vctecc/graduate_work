@@ -9,7 +9,7 @@ app = Celery('payment_service', broker=settings.broker_url, include=['tasks'])
 if settings.test:
     SCHEDULE = timedelta(seconds=1)
 else:
-    SCHEDULE = timedelta(minutes=5)
+    SCHEDULE = timedelta(seconds=30)
 
 CELERYBEAT_SCHEDULE = {
     'handle_pending_payments': {

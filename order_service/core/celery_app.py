@@ -10,7 +10,7 @@ app = Celery('order_service', broker=settings.broker_url,
 if settings.test:
     SCHEDULE = timedelta(seconds=1)
 else:
-    SCHEDULE = timedelta(hours=12)
+    SCHEDULE = timedelta(seconds=30)
 
 CELERYBEAT_SCHEDULE = {
     'handle_payment_orders': {
