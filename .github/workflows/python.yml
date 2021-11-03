@@ -31,7 +31,7 @@ jobs:
 
       - name: Linters
         run: |
-          git diff origin/main | flake8 --diff
+          flake8
           
       - name: Deploy to GitHub Pages
         if: always()
