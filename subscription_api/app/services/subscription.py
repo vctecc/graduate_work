@@ -69,6 +69,7 @@ class SubscriptionService(CRUDBase):
         subscription = subscription.scalar_one_or_none()
         if subscription:
             subscription.end_date = obj.end_date
+            subscription.state = SubscriptionState.ACTIVE
             await self.db.commit()
             return subscription
 
