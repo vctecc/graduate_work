@@ -15,7 +15,7 @@ logger = logging.getLogger(__name__)
 CUSTOMERS = (
     {
         "id": 1,
-        "user_id": "a49b436a-d0b3-4e3e-84e5-ac9204a33042",
+        "user_id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
         "provider_customer_id": "cus_KSkOhnNYigh8Mc",
     },
 )
